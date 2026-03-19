@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const apiMessage = document.getElementById('api-message');
     const backToProductsButton = document.getElementById('back-to-products');
     const startNewOrderButton = document.getElementById('start-new-order');
+    const copyPixCodeButton = document.getElementById('copy-pix-code-button');
 
     let selectedProduct = {};
 
@@ -132,13 +133,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const result = await response.json();
 
-            if (response.ok) {
-                document.getElementById('pix-qr-code').src = `data:image/png;base64,${result.pix_qr_code}`;
-                document.getElementById('pix-code').textContent = result.pix_payload;
-                showSection(confirmationSection);
-                window.scrollTo(0, 0);
+            if (response.ok && result.success) {
+                const pixPayload = result.transaction?.pix_payload;
+                const pixContainer = document.getElementById('pix-container');
+
+                if (pixPayload) {
+                    pixContainer.innerHTML = ''; // Limpa o container
+                    new QRCode(pixContainer, {
+                        text: pixPayload,
+                        width: 256,
+                        height: 256,
+                        colorDark : "#000000",
+                        colorLight : "#ffffff",
+                        correctLevel : QRCode.CorrectLevel.H
+                    });
+                    
+                    document.getElementById('pix-code').textContent = pixPayload;
+                    showSection(confirmationSection);
+                    window.scrollTo(0, 0);
+                } else {
+                    throw new Error('Payload PIX não foi recebido da API.');
+                }
             } else {
-                throw new Error(result.error || 'Erro ao processar pagamento.');
+                throw new Error(result.error || 'Erro ao processar o pagamento.');
             }
 
         } catch (error) {
@@ -151,6 +168,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('cpf').addEventListener('input', (event) => {
         event.target.value = formatCPF(event.target.value);
+    });
+
+    copyPixCodeButton.addEventListener('click', () => {
+        const pixCode = document.getElementById('pix-code').textContent;
+        navigator.clipboard.writeText(pixCode).then(() => {
+            showMessage('Código PIX copiado com sucesso!');
+        }, (err) => {
+            showMessage('Erro ao copiar o código PIX.', 'error');
+            console.error('Could not copy text: ', err);
+        });
     });
     
     backToProductsButton.addEventListener('click', () => showSection(productsSection));

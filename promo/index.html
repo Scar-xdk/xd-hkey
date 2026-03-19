@@ -80,12 +80,11 @@
         <section id="confirmation-section">
             <h2>Pagamento via PIX</h2>
             <p style="text-align:center;">Leia o QR Code com o app do seu banco!</p>
-            <div id="pix-container">
-                <img id="pix-qr-code" src="" alt="PIX QR Code">
-            </div>
+            <div id="pix-container"></div>
             <p style="text-align:center; margin-top: 15px;">Ou copie o código abaixo:</p>
             <div id="pix-code-container">
                 <p id="pix-code"></p>
+                <button id="copy-pix-code-button" class="copy-button">Copiar Código</button>
             </div>
             <button class="back-button" id="start-new-order">Fazer Novo Pedido</button>
         </section>
@@ -94,6 +93,7 @@
 
     </main>
     
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="js/api.js"></script>
 
 </body>
