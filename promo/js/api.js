@@ -41,6 +41,22 @@ document.addEventListener('DOMContentLoaded', () => {
         cpf = cpf.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
         return cpf;
     };
+    
+    const validateCPF = (cpf) => {
+        cpf = cpf.replace(/[^\d]+/g, '');
+        if (cpf === '' || cpf.length !== 11 || /^(\d)\1{10}$/.test(cpf)) return false;
+        let add = 0;
+        for (let i = 0; i < 9; i++) add += parseInt(cpf.charAt(i)) * (10 - i);
+        let rev = 11 - (add % 11);
+        if (rev === 10 || rev === 11) rev = 0;
+        if (rev !== parseInt(cpf.charAt(9))) return false;
+        add = 0;
+        for (let i = 0; i < 10; i++) add += parseInt(cpf.charAt(i)) * (11 - i);
+        rev = 11 - (add % 11);
+        if (rev === 10 || rev === 11) rev = 0;
+        if (rev !== parseInt(cpf.charAt(10))) return false;
+        return true;
+    };
 
     const sanitizeInput = (input) => {
         const div = document.createElement('div');
@@ -73,12 +89,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const name = document.getElementById('name').value.trim();
         const email = document.getElementById('email').value.trim();
-        const phone = document.getElementById('phone').value.trim();
+        const phoneRaw = document.getElementById('phone').value.trim();
         const cpf = document.getElementById('cpf').value.trim();
         const address = document.getElementById('address').value.trim();
 
-        if (!name || !email || !phone || !cpf || !address) {
+        if (!name || !email || !phoneRaw || !cpf || !address) {
             alert('Por favor, preencha todos os campos obrigatórios.');
+            return;
+        }
+
+        if (!validateCPF(cpf)) {
+            alert('CPF inválido. Por favor, verifique o número digitado.');
             return;
         }
 
@@ -86,14 +107,17 @@ document.addEventListener('DOMContentLoaded', () => {
         submitButton.disabled = true;
         apiMessage.style.display = 'none';
 
+        const cleanPhone = '+55' + phoneRaw.replace(/\D/g, '');
+        const cleanCPF = cpf.replace(/\D/g, '');
+
         const payload = {
             total_amount: selectedProduct.price,
             customer: {
                 name: sanitizeInput(name),
                 email: sanitizeInput(email),
-                phone: sanitizeInput(phone),
+                phone: sanitizeInput(cleanPhone),
                 document_type: "CPF",
-                document: sanitizeInput(cpf.replace(/\D/g, '')),
+                document: sanitizeInput(cleanCPF),
             }
         };
 
