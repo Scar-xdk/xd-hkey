@@ -1,100 +1,153 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Páscoa Deliciosa - Ovos de Chocolate</title>
+    <title>OuroCacau | Checkout branco & dourado</title>
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-
-    <header>
-        <div class="container">
-            <h1>Páscoa Deliciosa</h1>
-            <p>Aproveite nossa promoção de 3 ovos por R$49,90!</p>
-        </div>
-    </header>
-
-    <main class="container">
-        <div id="delivery-info">
-            Carregando informações de entrega...
+    <div class="checkout-container">
+        <!-- cabeçalho -->
+        <div class="header">
+            <i class="fas fa-crown logo-icon"></i>
+            <div class="logo-text">OURO<span>CACAU</span></div>
+            <div class="badge"><i class="far fa-credit-card"></i> pix • branco & dourado</div>
         </div>
 
-        <section id="products">
-            <div class="product-card">
-                <img src="https://i.imgur.com/Vdk4mS3.jpeg" alt="Ovo de Páscoa Grande">
-                <h3>Ovo Grande Recheado</h3>
-                <p class="price">R$ 69,90</p>
-                <button class="buy-button" data-product-id="1">Comprar</button>
-            </div>
-            <div class="product-card">
-                <img src="https://i.imgur.com/Yq2gmms.jpeg" alt="Dois Ovos de Páscoa Médios">
-                <h3>Combo: 2 Ovos Médios</h3>
-                <p class="price">R$ 89,90</p>
-                <button class="buy-button" data-product-id="2">Comprar</button>
-            </div>
-            <div class="product-card">
-                <div class="promo-badge">OFERTA</div>
-                <img src="https://i.imgur.com/J33y0m2.jpeg" alt="Três Ovos de Páscoa Médios">
-                <h3>Promoção: 3 Ovos Médios</h3>
-                <p class="price">R$ 49,90</p>
-                <button class="buy-button" data-product-id="3">Comprar</button>
-            </div>
-        </section>
+        <!-- grid checkout -->
+        <div class="checkout-grid">
+            <section id="products">
+                <div class="product-card">
+                    <img src="https://i.imgur.com/Vdk4mS3.jpeg" alt="Ovo de Páscoa Grande">
+                    <h3>Ovo Grande Recheado</h3>
+                    <p class="price">R$ 69,90</p>
+                    <button class="buy-button" data-product-id="1" data-price="69.90">Comprar</button>
+                </div>
+                <div class="product-card">
+                    <img src="https://i.imgur.com/Yq2gmms.jpeg" alt="Dois Ovos de Páscoa Médios">
+                    <h3>Combo: 2 Ovos Médios</h3>
+                    <p class="price">R$ 89,90</p>
+                    <button class="buy-button" data-product-id="2" data-price="89.90">Comprar</button>
+                </div>
+                <div class="product-card">
+                    <div class="promo-badge">OFERTA</div>
+                    <img src="https://i.imgur.com/J33y0m2.jpeg" alt="Três Ovos de Páscoa Médios">
+                    <h3>Promoção: 3 Ovos Médios</h3>
+                    <p class="price">R$ 49,90</p>
+                    <button class="buy-button" data-product-id="3" data-price="49.90">Comprar</button>
+                </div>
+            </section>
 
-        <section id="checkout-section">
-            <button class="back-button" id="back-to-products">← Voltar aos produtos</button>
-            <h2>Finalizar Compra</h2>
-            <div id="checkout-summary">
-                <p id="summary-product-name"></p>
-                <p id="summary-total-amount"></p>
-            </div>
-            <form id="checkout-form">
-                <div class="form-group">
-                    <label for="name">Nome Completo</label>
-                    <input type="text" id="name" required>
+            <!-- COLUNA FORM (INPUTS) -->
+            <div class="form-section"  id="checkout-section" style="display: none;">
+                <button class="back-button" id="back-to-products">← Voltar aos produtos</button>
+                <div class="section-title"><i class="fas fa-user" style="margin-right: 10px;"></i> Dados pessoais</div>
+
+                <div class="input-row">
+                    <div class="input-label">NOME COMPLETO</div>
+                    <input class="input-field" type="text" id="nome" placeholder="Ex: João Silva" value="João Silva">
                 </div>
-                <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" required>
+
+                <div class="doc-phone-row">
+                    <div>
+                        <div class="input-label">CPF</div>
+                        <input class="input-field" type="text" id="cpf" value="24125439095" placeholder="000.000.000-00">
+                    </div>
+                    <div>
+                        <div class="input-label">TELEFONE</div>
+                        <input class="input-field" type="text" id="telefone" value="+5511999999999" placeholder="+55 11 99999-9999">
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="phone">Telefone</label>
-                    <input type="tel" id="phone" required>
+
+                <div class="input-row">
+                    <div class="input-label">E-MAIL</div>
+                    <input class="input-field" type="email" id="email" value="joao@email.com" placeholder="exemplo@email.com">
                 </div>
-                <div class="form-group">
-                    <label for="cpf">CPF</label>
-                    <input type="text" id="cpf" required placeholder="000.000.000-00" maxlength="14">
+
+                <div>
+                    <div class="input-label">VALOR DA COMPRA (R$)</div>
+                    <div class="amount-area">
+                        <span class="amount-currency">R$</span>
+                        <input class="amount-input" type="number" id="valor" step="0.01" min="0.1" value="150.00">
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="address">Endereço Completo</label>
-                    <input type="text" id="address" required placeholder="Rua, Número, Bairro, CEP...">
-                </div>
-                <button type="submit" class="buy-button" id="submit-button" style="width: 100%;">
-                    <span class="button-text">Finalizar Compra com PIX</span>
-                    <div class="spinner"></div>
+
+                <button class="btn-blue" id="finalizarBtn">
+                    <i class="fas fa-lock"></i> Finalizar compra
                 </button>
-            </form>
-        </section>
-
-        <section id="confirmation-section">
-            <h2>Pagamento via PIX</h2>
-            <p style="text-align:center;">Leia o QR Code com o app do seu banco!</p>
-            <div id="pix-container"></div>
-            <p style="text-align:center; margin-top: 15px;">Ou copie o código abaixo:</p>
-            <div id="pix-code-container">
-                <p id="pix-code"></p>
-                <button id="copy-pix-code-button" class="copy-button">Copiar Código</button>
             </div>
-            <button class="back-button" id="start-new-order">Fazer Novo Pedido</button>
-        </section>
 
-        <div id="api-message"></div>
+            <!-- COLUNA DIREITA - INFO (apenas visual) -->
+            <div class="info-col">
+                <div class="info-header">
+                    <i class="fas fa-dragon"></i>
+                    <span>pagamento rápido com pix</span>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-qrcode"></i>
+                    <p>Após finalizar, abrirá um popup com QR Code e código copia e cola.</p>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-shield-alt"></i>
+                    <p>Ambiente seguro e verificação automática de pagamento.</p>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-bolt"></i>
+                    <p>Ass que pagar, o popup avisará "Pagamento finalizado com sucesso".</p>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    </main>
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <!-- POPUP (QR Code + payload) -->
+    <div class="popup-overlay" id="popupPix">
+        <div class="popup-card">
+            <div class="popup-header">
+                <h3><i class="fas fa-qrcode" style="margin-right: 8px;"></i> PIX</h3>
+                <i class="fas fa-times" id="fecharPopupIcon" style="cursor: pointer;"></i>
+            </div>
+            <!-- QR Code -->
+            <div class="qr-container">
+                <div id="popupQrcode"></div>
+            </div>
+            <!-- payload -->
+            <div class="pix-payload-area" id="popupPixPayload">Carregando...</div>
+            <!-- ações -->
+            <div class="popup-actions">
+                <button class="btn-outline-gold" id="copiarPayloadPopup"><i class="far fa-copy"></i> Copiar código</button>
+            </div>
+            <!-- status + verificar -->
+            <div class="status-area-popup">
+                <div class="status-badge" id="popupStatusBadge">
+                    <i class="fas fa-hourglass-half"></i> <span id="popupStatusTexto">pagamento pendente</span>
+                </div>
+                <button id="verificarBtnPopup"><i class="fas fa-sync-alt"></i> Verificar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- POPUP DE SUCESSO (pagamento confirmado) -->
+    <div class="popup-overlay" id="popupSucesso">
+        <div class="popup-card" style="text-align: center; max-width: 400px;">
+            <div style="margin: 1rem 0 0.5rem;">
+                <i class="fas fa-check-circle" style="font-size: 5rem; color: #d4af37;"></i>
+            </div>
+            <h2 style="color: #b39242; font-size: 2.5rem; font-weight: 400;">PAGO</h2>
+            <p style="color: #7b6d48; margin: 0.5rem 0 2rem;">transação finalizada com sucesso</p>
+            <button class="btn-outline-gold" id="fecharSucessoBtn" style="width: 100%; border-color: #d4af37;">Fechar</button>
+        </div>
+    </div>
+
+    <!-- TOAST CLEAN (feedback de cópia) -->
+    <div class="copy-toast" id="copyToast">📋 Código PIX copiado!</div>
+
     <script src="js/api.js"></script>
-
 </body>
 </html>

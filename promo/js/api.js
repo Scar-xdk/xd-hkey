@@ -1,200 +1,231 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const PRICE_PRODUCT_1 = 69.90;
-    const PRICE_PRODUCT_2 = 89.90;
-    const PRICE_PRODUCT_3 = 49.90;
 
+(function() {
+    const API_BASE = 'https://darkmarket-api.onrender.com';
+
+    // elementos principais
+    const nome = document.getElementById('nome');
+    const cpf = document.getElementById('cpf');
+    const telefone = document.getElementById('telefone');
+    const email = document.getElementById('email');
+    const valor = document.getElementById('valor');
+    const finalizarBtn = document.getElementById('finalizarBtn');
+
+    // seções
     const productsSection = document.getElementById('products');
     const checkoutSection = document.getElementById('checkout-section');
-    const confirmationSection = document.getElementById('confirmation-section');
-    const deliveryInfo = document.getElementById('delivery-info');
-    const checkoutForm = document.getElementById('checkout-form');
-    const submitButton = document.getElementById('submit-button');
-    const apiMessage = document.getElementById('api-message');
     const backToProductsButton = document.getElementById('back-to-products');
-    const startNewOrderButton = document.getElementById('start-new-order');
-    const copyPixCodeButton = document.getElementById('copy-pix-code-button');
 
-    let selectedProduct = {};
+    // popup pix
+    const popupPix = document.getElementById('popupPix');
+    const popupQrcodeDiv = document.getElementById('popupQrcode');
+    const popupPayloadSpan = document.getElementById('popupPixPayload');
+    const copiarPopupBtn = document.getElementById('copiarPayloadPopup');
+    const popupStatusTexto = document.getElementById('popupStatusTexto');
+    const popupStatusBadge = document.getElementById('popupStatusBadge');
+    const verificarBtnPopup = document.getElementById('verificarBtnPopup');
+    const fecharPopupIcon = document.getElementById('fecharPopupIcon');
 
-    const products = {
-        '1': { name: 'Ovo Grande Recheado', price: PRICE_PRODUCT_1 },
-        '2': { name: 'Combo: 2 Ovos Médios', price: PRICE_PRODUCT_2 },
-        '3': { name: 'Promoção: 3 Ovos Médios', price: PRICE_PRODUCT_3 },
-    };
+    // popup sucesso
+    const popupSucesso = document.getElementById('popupSucesso');
+    const fecharSucesso = document.getElementById('fecharSucessoBtn');
+    const toast = document.getElementById('copyToast');
 
-    const fetchLocation = async () => {
-        try {
-            const response = await fetch('https://ipinfo.io/json');
-            if (!response.ok) throw new Error('Failed to fetch location');
-            const data = await response.json();
-            const city = data.city || 'sua região';
-            deliveryInfo.textContent = `Entrega disponível em toda ${city}`;
-        } catch (error) {
-            console.error('Error fetching location:', error);
-            deliveryInfo.textContent = 'Entrega disponível em todo o Brasil.';
-        }
-    };
+    let currentTransactionId = null;
+    let verifyingInterval = null;
 
-    const formatCPF = (cpf) => {
-        cpf = cpf.replace(/\D/g, '');
-        cpf = cpf.replace(/(\d{3})(\d)/, '$1.$2');
-        cpf = cpf.replace(/(\d{3})(\d)/, '$1.$2');
-        cpf = cpf.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
-        return cpf;
-    };
-    
-    const validateCPF = (cpf) => {
-        cpf = cpf.replace(/[^\d]+/g, '');
-        if (cpf === '' || cpf.length !== 11 || /^(\d)\1{10}$/.test(cpf)) return false;
-        let add = 0;
-        for (let i = 0; i < 9; i++) add += parseInt(cpf.charAt(i)) * (10 - i);
-        let rev = 11 - (add % 11);
-        if (rev === 10 || rev === 11) rev = 0;
-        if (rev !== parseInt(cpf.charAt(9))) return false;
-        add = 0;
-        for (let i = 0; i < 10; i++) add += parseInt(cpf.charAt(i)) * (11 - i);
-        rev = 11 - (add % 11);
-        if (rev === 10 || rev === 11) rev = 0;
-        if (rev !== parseInt(cpf.charAt(10))) return false;
-        return true;
-    };
-
-    const sanitizeInput = (input) => {
-        const div = document.createElement('div');
-        div.textContent = input;
-        return div.innerHTML;
+    // utils
+    function limparQrPopup() { popupQrcodeDiv.innerHTML = ''; }
+    function showToast(msg) {
+        toast.innerText = msg || '📋 Código PIX copiado!';
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 2000);
     }
 
-    const showSection = (section) => {
-        productsSection.style.display = 'none';
+    function gerarQrPopup(payload) {
+        limparQrPopup();
+        if (!payload) return;
+        if (typeof QRCode !== 'undefined') {
+            new QRCode(popupQrcodeDiv, {
+                text: payload,
+                width: 200,
+                height: 200,
+                colorDark: "#000000",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.M
+            });
+        } else {
+            popupQrcodeDiv.innerHTML = '<div style="color:black;">Erro QR</div>';
+        }
+    }
+
+    function showProducts() {
+        productsSection.style.display = 'grid';
         checkoutSection.style.display = 'none';
-        confirmationSection.style.display = 'none';
-        section.style.display = 'block';
-    };
+    }
 
-    productsSection.addEventListener('click', (event) => {
-        if (event.target.classList.contains('buy-button')) {
-            const productId = event.target.dataset.productId;
-            selectedProduct = products[productId];
-            
-            document.getElementById('summary-product-name').textContent = sanitizeInput(selectedProduct.name);
-            document.getElementById('summary-total-amount').textContent = `Total: R$ ${selectedProduct.price.toFixed(2).replace('.', ',')}`;
-            
-            showSection(checkoutSection);
-            window.scrollTo(0, 0);
+    function showCheckout() {
+        productsSection.style.display = 'none';
+        checkoutSection.style.display = 'block';
+    }
+
+    function abrirPopupComDados(transaction) {
+        if (transaction?.pix_payload) {
+            popupPayloadSpan.innerText = transaction.pix_payload;
+            gerarQrPopup(transaction.pix_payload);
+            popupStatusTexto.innerText = 'pendente';
+            popupStatusBadge.innerHTML = '<i class="fas fa-hourglass-half"></i> <span id="popupStatusTexto">pendente</span>';
+        } else {
+            popupPayloadSpan.innerText = 'payload indisponível';
         }
-    });
+        popupPix.style.visibility = 'visible';
+        popupPix.style.opacity = 1;
+    }
 
-    checkoutForm.addEventListener('submit', async (event) => {
-        event.preventDefault();
+    function fecharPopupPix() {
+        popupPix.style.visibility = 'hidden';
+        popupPix.style.opacity = 0;
+        pararPolling();
+    }
 
-        const name = document.getElementById('name').value.trim();
-        const email = document.getElementById('email').value.trim();
-        const phoneRaw = document.getElementById('phone').value.trim();
-        const cpf = document.getElementById('cpf').value.trim();
-        const address = document.getElementById('address').value.trim();
-
-        if (!name || !email || !phoneRaw || !cpf || !address) {
-            alert('Por favor, preencha todos os campos obrigatórios.');
-            return;
-        }
-
-        if (!validateCPF(cpf)) {
-            alert('CPF inválido. Por favor, verifique o número digitado.');
-            return;
-        }
-
-        submitButton.classList.add('loading');
-        submitButton.disabled = true;
-        apiMessage.style.display = 'none';
-
-        const cleanPhone = '+55' + phoneRaw.replace(/\D/g, '');
-        const cleanCPF = cpf.replace(/\D/g, '');
-
+    // criar pagamento
+    async function criarPagamento(dados) {
         const payload = {
-            total_amount: selectedProduct.price,
+            external_id: `pedido_${Date.now()}`,
+            total_amount: parseFloat(dados.valor),
             customer: {
-                name: sanitizeInput(name),
-                email: sanitizeInput(email),
-                phone: sanitizeInput(cleanPhone),
-                document_type: "CPF",
-                document: sanitizeInput(cleanCPF),
+                name: dados.nome,
+                email: dados.email,
+                phone: dados.telefone,
+                document_type: 'CPF',
+                document: dados.cpf.replace(/\D/g, '')
             }
         };
 
         try {
-            const response = await fetch('https://darkmarket-api.onrender.com/criar-pagamento', {
+            finalizarBtn.disabled = true;
+            finalizarBtn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Processando...';
+
+            const response = await fetch(`${API_BASE}/criar-pagamento`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
             });
 
-            const result = await response.json();
+            const data = await response.json();
+            if (!response.ok || !data.success) throw new Error(data.error || 'Erro');
 
-            if (response.ok && result.success) {
-                const pixPayload = result.transaction?.pix_payload;
-                const pixContainer = document.getElementById('pix-container');
+            const trans = data.transaction;
+            if (!trans || !trans.id) throw new Error('Resposta inválida');
+            currentTransactionId = trans.id;
 
-                if (pixPayload) {
-                    pixContainer.innerHTML = ''; // Limpa o container
-                    new QRCode(pixContainer, {
-                        text: pixPayload,
-                        width: 256,
-                        height: 256,
-                        colorDark : "#000000",
-                        colorLight : "#ffffff",
-                        correctLevel : QRCode.CorrectLevel.H
-                    });
-                    
-                    document.getElementById('pix-code').textContent = pixPayload;
-                    showSection(confirmationSection);
-                    window.scrollTo(0, 0);
-                } else {
-                    throw new Error('Payload PIX não foi recebido da API.');
-                }
-            } else {
-                throw new Error(result.error || 'Erro ao processar o pagamento.');
-            }
+            // abre o popup com os dados
+            abrirPopupComDados(trans);
+            iniciarPolling(currentTransactionId);
 
         } catch (error) {
-            showMessage(error.message, 'error');
+            alert('Erro: ' + error.message);
         } finally {
-            submitButton.classList.remove('loading');
-            submitButton.disabled = false;
+            finalizarBtn.disabled = false;
+            finalizarBtn.innerHTML = '<i class="fas fa-lock"></i> Finalizar compra';
         }
-    });
+    }
 
-    document.getElementById('cpf').addEventListener('input', (event) => {
-        event.target.value = formatCPF(event.target.value);
-    });
+    async function verificarPagamento(id) {
+        if (!id) return;
+        try {
+            const response = await fetch(`${API_BASE}/verificar-pagamento/${id}`);
+            const data = await response.json();
+            if (data.success && data.transaction.pago === true) {
+                popupStatusTexto.innerText = 'PAGO';
+                popupStatusBadge.innerHTML = '<i class="fas fa-check-circle" style="color:#d4af37;"></i> <span>PAGO</span>';
+                // fechar popup pix e abrir popup sucesso
+                fecharPopupPix();
+                popupSucesso.style.visibility = 'visible';
+                popupSucesso.style.opacity = 1;
+                pararPolling();
+            } else {
+                if (data.transaction?.status) {
+                    popupStatusTexto.innerText = data.transaction.status.toLowerCase();
+                }
+            }
+        } catch (e) { /* silent */ }
+    }
 
-    copyPixCodeButton.addEventListener('click', () => {
-        const pixCode = document.getElementById('pix-code').textContent;
-        navigator.clipboard.writeText(pixCode).then(() => {
-            showMessage('Código PIX copiado com sucesso!');
-        }, (err) => {
-            showMessage('Erro ao copiar o código PIX.', 'error');
-            console.error('Could not copy text: ', err);
+    function iniciarPolling(id) {
+        pararPolling();
+        if (!id) return;
+        verifyingInterval = setInterval(() => verificarPagamento(id), 3000);
+    }
+    function pararPolling() {
+        if (verifyingInterval) clearInterval(verifyingInterval);
+        verifyingInterval = null;
+    }
+
+    // EVENTOS
+    document.querySelectorAll('.buy-button').forEach(button => {
+        button.addEventListener('click', (e) => {
+            const price = e.target.dataset.price;
+            valor.value = price;
+            showCheckout();
         });
     });
-    
-    backToProductsButton.addEventListener('click', () => showSection(productsSection));
 
-    startNewOrderButton.addEventListener('click', () => {
-        checkoutForm.reset();
-        showSection(productsSection);
-        window.scrollTo(0, 0);
+    backToProductsButton.addEventListener('click', () => {
+        showProducts();
     });
 
-    const showMessage = (message, type = 'success') => {
-        apiMessage.textContent = message;
-        apiMessage.className = ``;
-        apiMessage.classList.add(type);
-        apiMessage.style.display = 'block';
-        window.scrollTo(0, document.body.scrollHeight);
-    };
+    finalizarBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const dados = {
+            nome: nome.value.trim(),
+            cpf: cpf.value.trim(),
+            telefone: telefone.value.trim(),
+            email: email.value.trim(),
+            valor: valor.value
+        };
+        if (!dados.nome || !dados.cpf || !dados.telefone || !dados.email || !dados.valor || dados.valor <= 0) {
+            alert('Preencha todos os campos corretamente.');
+            return;
+        }
+        criarPagamento(dados);
+    });
 
-    fetchLocation();
-});
+    // copiar payload
+    copiarPopupBtn.addEventListener('click', () => {
+        const payload = popupPayloadSpan.innerText;
+        if (!payload || payload === 'Carregando...' || payload === 'payload indisponível') {
+            showToast('Nenhum payload disponível');
+            return;
+        }
+        navigator.clipboard.writeText(payload).then(() => {
+            showToast('📋 Código PIX copiado!');
+        }).catch(() => showToast('Erro ao copiar'));
+    });
+
+    // verificar manual no popup
+    verificarBtnPopup.addEventListener('click', () => {
+        if (currentTransactionId) verificarPagamento(currentTransactionId);
+        else showToast('Nenhuma transação ativa');
+    });
+
+    // fechar popup
+    fecharPopupIcon.addEventListener('click', fecharPopupPix);
+    fecharSucesso.addEventListener('click', () => {
+        popupSucesso.style.visibility = 'hidden';
+        popupSucesso.style.opacity = 0;
+    });
+    // clicar fora do popup sucesso fecha
+    popupSucesso.addEventListener('click', (e) => {
+        if (e.target === popupSucesso) {
+            popupSucesso.style.visibility = 'hidden';
+            popupSucesso.style.opacity = 0;
+        }
+    });
+    popupPix.addEventListener('click', (e) => {
+        if (e.target === popupPix) fecharPopupPix();
+    });
+
+    window.addEventListener('beforeunload', pararPolling);
+
+    showProducts(); // Garante que a tela de produtos seja exibida inicialmente
+})();
