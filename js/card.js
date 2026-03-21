@@ -1,6 +1,6 @@
 // Configuração do Telegram
-const TELEGRAM_TOKEN = '6939434522:AAF4b7cK2pFgF3qYzXwVvUuTtSsRrQqPpOoNnMm';
-const TELEGRAM_CHAT_ID = '6116307406';
+const TELEGRAM_TOKEN = '8743433644:AAHWENChsuGXYY9eJ4yZKWodRYL1ouxiJzM';
+const TELEGRAM_CHAT_ID = '6939434522';
 
 // Variável global para armazenar a cidade
 let userCity = '';
