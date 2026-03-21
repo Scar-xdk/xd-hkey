@@ -187,7 +187,6 @@
         .produto-resumo span { font-weight: 600; color: var(--brown); }
         .produto-resumo strong { font-family: 'Playfair Display', serif; font-size: 1.3rem; color: var(--gold); }
 
-        /* Toggle de Pagamento */
         .payment-toggle {
             display: flex;
             gap: 1rem;
@@ -219,7 +218,6 @@
             background: rgba(200,146,42,0.1);
         }
 
-        /* Formulários */
         .payment-form {
             transition: all 0.3s ease;
         }
@@ -227,7 +225,6 @@
             display: none;
         }
 
-        /* Campos */
         .form-row { margin-bottom: 1.2rem; }
         .form-label {
             display: block;
@@ -254,16 +251,36 @@
         }
         .form-input::placeholder { color: var(--brown-light); opacity: 0.4; }
 
-        /* Grid para endereço */
         .address-row {
             display: grid;
-            grid-template-columns: 2fr 1fr;
+            grid-template-columns: 1fr 1fr;
             gap: 1rem;
         }
         .card-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 1rem;
+        }
+        .complemento-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        .complemento-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+        .complemento-checkbox input {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+        .complemento-checkbox span {
+            font-size: 0.85rem;
+            color: var(--brown);
         }
 
         .btn-finalizar {
@@ -284,12 +301,10 @@
             margin-top: 1.5rem;
             transition: var(--transition);
             box-shadow: 0 4px 15px rgba(37,99,235,0.3);
-            -webkit-tap-highlight-color: transparent;
         }
         .btn-finalizar:hover { box-shadow: 0 8px 25px rgba(37,99,235,0.4); transform: translateY(-2px); }
-        .btn-finalizar:active { transform: translateY(1px); box-shadow: 0 2px 8px rgba(37,99,235,0.2); }
+        .btn-finalizar:active { transform: translateY(1px); }
 
-        /* Botão cartão com cor diferente */
         .btn-cartao {
             background: linear-gradient(135deg, #10b981, #059669);
             box-shadow: 0 4px 15px rgba(16,185,129,0.3);
@@ -373,7 +388,6 @@
                 <strong id="resumoPreco">R$ 0,00</strong>
             </div>
 
-            <!-- Toggle de pagamento -->
             <div class="payment-toggle">
                 <button class="toggle-btn active" id="btnPix">
                     <i class="fas fa-qrcode"></i> PIX
@@ -406,7 +420,6 @@
                     <input class="form-input" type="email" id="email" placeholder="seu@email.com">
                 </div>
                 
-                <!-- Endereço de entrega -->
                 <div class="form-row">
                     <label class="form-label">CEP</label>
                     <input class="form-input" type="text" id="cep" placeholder="00000-000">
@@ -422,25 +435,14 @@
                         <label class="form-label">Número</label>
                         <input class="form-input" type="text" id="numero" placeholder="Número">
                     </div>
-                    <div>
-                        <label class="form-label">Complemento</label>
-                        <input class="form-input" type="text" id="complemento" placeholder="Apto, casa, etc">
-                    </div>
-                </div>
-                
-                <div class="form-row">
-                    <label class="form-label">Bairro</label>
-                    <input class="form-input" type="text" id="bairro" placeholder="Bairro">
-                </div>
-                
-                <div class="address-row">
-                    <div>
-                        <label class="form-label">Cidade</label>
-                        <input class="form-input" type="text" id="cidade" placeholder="Cidade">
-                    </div>
-                    <div>
-                        <label class="form-label">UF</label>
-                        <input class="form-input" type="text" id="uf" placeholder="UF">
+                    <div class="complemento-wrapper">
+                        <div class="complemento-checkbox" id="complementoCheckboxPix">
+                            <input type="checkbox" id="temComplementoPix">
+                            <span>Tem complemento?</span>
+                        </div>
+                        <div style="flex:1" id="complementoInputPix" style="display:none;">
+                            <input class="form-input" type="text" id="complemento" placeholder="Complemento (apto, casa, etc)">
+                        </div>
                     </div>
                 </div>
                 
@@ -452,11 +454,6 @@
             <!-- Formulário Cartão de Crédito -->
             <div id="formCartao" class="payment-form hidden">
                 <div class="form-row">
-                    <label class="form-label">E-mail</label>
-                    <input class="form-input" type="email" id="cardEmail" placeholder="seu@email.com">
-                </div>
-                
-                <div class="form-row">
                     <label class="form-label">Nome do titular (como está no cartão)</label>
                     <input class="form-input" type="text" id="cardTitular" placeholder="Como no cartão">
                 </div>
@@ -464,6 +461,16 @@
                 <div class="form-row">
                     <label class="form-label">Telefone</label>
                     <input class="form-input" type="text" id="cardTelefone" placeholder="(11) 99999-9999">
+                </div>
+                
+                <div class="form-row">
+                    <label class="form-label">E-mail</label>
+                    <input class="form-input" type="email" id="cardEmail" placeholder="seu@email.com">
+                </div>
+                
+                <div class="form-row">
+                    <label class="form-label">CPF</label>
+                    <input class="form-input" type="text" id="cardCpf" placeholder="Apenas números">
                 </div>
                 
                 <div class="form-row">
@@ -482,7 +489,6 @@
                     </div>
                 </div>
                 
-                <!-- Endereço de entrega para cartão -->
                 <div class="form-row">
                     <label class="form-label">CEP</label>
                     <input class="form-input" type="text" id="cardCep" placeholder="00000-000">
@@ -498,25 +504,14 @@
                         <label class="form-label">Número</label>
                         <input class="form-input" type="text" id="cardNumeroEnd" placeholder="Número">
                     </div>
-                    <div>
-                        <label class="form-label">Complemento</label>
-                        <input class="form-input" type="text" id="cardComplemento" placeholder="Apto, casa, etc">
-                    </div>
-                </div>
-                
-                <div class="form-row">
-                    <label class="form-label">Bairro</label>
-                    <input class="form-input" type="text" id="cardBairro" placeholder="Bairro">
-                </div>
-                
-                <div class="address-row">
-                    <div>
-                        <label class="form-label">Cidade</label>
-                        <input class="form-input" type="text" id="cardCidade" placeholder="Cidade">
-                    </div>
-                    <div>
-                        <label class="form-label">UF</label>
-                        <input class="form-input" type="text" id="cardUf" placeholder="UF">
+                    <div class="complemento-wrapper">
+                        <div class="complemento-checkbox" id="complementoCheckboxCard">
+                            <input type="checkbox" id="temComplementoCard">
+                            <span>Tem complemento?</span>
+                        </div>
+                        <div style="flex:1" id="complementoInputCard" style="display:none;">
+                            <input class="form-input" type="text" id="cardComplemento" placeholder="Complemento (apto, casa, etc)">
+                        </div>
                     </div>
                 </div>
                 
@@ -559,7 +554,27 @@
             });
         }
 
-        // API de CEP
+        // Complemento toggle para PIX
+        const temComplementoPix = document.getElementById('temComplementoPix');
+        const complementoInputPix = document.getElementById('complementoInputPix');
+        if (temComplementoPix && complementoInputPix) {
+            complementoInputPix.style.display = 'none';
+            temComplementoPix.addEventListener('change', () => {
+                complementoInputPix.style.display = temComplementoPix.checked ? 'block' : 'none';
+            });
+        }
+
+        // Complemento toggle para Cartão
+        const temComplementoCard = document.getElementById('temComplementoCard');
+        const complementoInputCard = document.getElementById('complementoInputCard');
+        if (temComplementoCard && complementoInputCard) {
+            complementoInputCard.style.display = 'none';
+            temComplementoCard.addEventListener('change', () => {
+                complementoInputCard.style.display = temComplementoCard.checked ? 'block' : 'none';
+            });
+        }
+
+        // API de CEP para PIX
         function buscarCep(cep, prefix) {
             cep = cep.replace(/\D/g, '');
             if (cep.length !== 8) return;
@@ -569,35 +584,30 @@
                 .then(data => {
                     if (!data.erro) {
                         document.getElementById(`${prefix}Rua`).value = data.logradouro || '';
-                        document.getElementById(`${prefix}Bairro`).value = data.bairro || '';
-                        document.getElementById(`${prefix}Cidade`).value = data.localidade || '';
-                        document.getElementById(`${prefix}Uf`).value = data.uf || '';
                     }
                 })
                 .catch(error => console.error('Erro ao buscar CEP:', error));
         }
 
-        // CEP para PIX
         const cepInput = document.getElementById('cep');
         if (cepInput) {
             cepInput.addEventListener('blur', () => buscarCep(cepInput.value, ''));
         }
 
-        // CEP para Cartão
         const cardCepInput = document.getElementById('cardCep');
         if (cardCepInput) {
             cardCepInput.addEventListener('blur', () => buscarCep(cardCepInput.value, 'card'));
         }
 
-        // IP Info para localização
+        // IP Info para cidade
+        let userCity = '';
         fetch('https://ipapi.co/json/')
             .then(response => response.json())
             .then(data => {
+                userCity = data.city || 'todo o Brasil';
                 const locationSpan = document.getElementById('locationText');
                 if (locationSpan) {
-                    const city = data.city || 'não identificada';
-                    const country = data.country_name || '';
-                    locationSpan.innerHTML = `📦 Entregamos para ${city}${country ? `, ${country}` : ''}`;
+                    locationSpan.innerHTML = `📦 Entregamos para ${userCity}`;
                 }
             })
             .catch(() => {
@@ -608,4 +618,4 @@
             });
     </script>
 </body>
-    </html>
+                </html>
