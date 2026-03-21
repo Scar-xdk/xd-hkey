@@ -171,31 +171,55 @@
         .produto-resumo span { font-weight: 600; color: var(--brown); }
         .produto-resumo strong { font-family: 'Playfair Display', serif; font-size: 1.3rem; color: var(--gold); }
 
-        .form-row { margin-bottom: 1.2rem; }
-        .form-label {
-            display: block;
-            font-weight: 600;
-            color: var(--brown);
-            margin-bottom: 0.4rem;
-            font-size: 0.9rem;
+        /* Toggle de Pagamento */
+        .payment-toggle {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            background: var(--cream-warm);
+            padding: 0.5rem;
+            border-radius: 60px;
+            border: 1px solid rgba(233,196,106,0.3);
         }
-        .form-input {
-            width: 100%;
-            padding: 0.9rem 1.2rem;
-            border-radius: 0.8rem;
-            border: 1.5px solid rgba(233,196,106,0.4);
+        .toggle-btn {
+            flex: 1;
+            padding: 0.8rem;
+            border: none;
+            background: transparent;
+            border-radius: 60px;
             font-family: 'Quicksand', sans-serif;
+            font-weight: 600;
             font-size: 1rem;
-            background: var(--cream);
-            color: var(--brown-dark);
-            transition: var(--transition);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--brown-light);
         }
-        .form-input:focus {
-            border-color: var(--gold);
-            outline: none;
-            box-shadow: 0 0 0 4px rgba(233,196,106,0.15);
+        .toggle-btn.active {
+            background: linear-gradient(135deg, var(--gold), #d4a03a);
+            color: var(--white);
+            box-shadow: 0 4px 12px var(--shadow-gold);
         }
-        .form-input::placeholder { color: var(--brown-light); opacity: 0.4; }
+        .toggle-btn:not(.active):hover {
+            background: rgba(200,146,42,0.1);
+        }
+
+        /* Formulários */
+        .payment-form {
+            transition: all 0.3s ease;
+        }
+        .payment-form.hidden {
+            display: none;
+        }
+
+        /* Campos do cartão */
+        .card-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        .card-cvv {
+            grid-template-columns: 1fr 1fr;
+        }
 
         .btn-finalizar {
             background: linear-gradient(135deg, #2563eb, #1d4ed8);
@@ -260,6 +284,7 @@
         @media (max-width: 768px) {
             .container { padding: 0 1rem; }
             .pagina-checkout { padding: 1.8rem; border-radius: 1.5rem; }
+            .card-row { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -290,41 +315,109 @@
                 <span id="resumoNome">Carregando...</span>
                 <strong id="resumoPreco">R$ 0,00</strong>
             </div>
-            
-            <div class="form-row">
-                <label class="form-label">Nome completo</label>
-                <input class="form-input" type="text" id="nome" placeholder="Ex: João Silva">
+
+            <!-- Toggle de pagamento -->
+            <div class="payment-toggle">
+                <button class="toggle-btn active" id="btnPix">
+                    <i class="fas fa-qrcode"></i> PIX
+                </button>
+                <button class="toggle-btn" id="btnCartao">
+                    <i class="fas fa-credit-card"></i> Cartão de Crédito
+                </button>
             </div>
             
-            <div class="form-row" style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
-                <div>
-                    <label class="form-label">CPF</label>
-                    <input class="form-input" type="text" id="cpf" placeholder="Apenas números">
+            <!-- Formulário PIX (existente) -->
+            <div id="formPix" class="payment-form">
+                <div class="form-row">
+                    <label class="form-label">Nome completo</label>
+                    <input class="form-input" type="text" id="nome" placeholder="Ex: João Silva">
                 </div>
-                <div>
-                    <label class="form-label">Telefone</label>
-                    <input class="form-input" type="text" id="telefone" placeholder="seu numero exemplo: +55119999..">
+                
+                <div class="form-row" style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+                    <div>
+                        <label class="form-label">CPF</label>
+                        <input class="form-input" type="text" id="cpf" placeholder="Apenas números">
+                    </div>
+                    <div>
+                        <label class="form-label">Telefone</label>
+                        <input class="form-input" type="text" id="telefone" placeholder="seu numero exemplo: +55119999..">
+                    </div>
                 </div>
+                
+                <div class="form-row">
+                    <label class="form-label">E-mail</label>
+                    <input class="form-input" type="email" id="email" placeholder="seu@email.com">
+                </div>
+                
+                <button class="btn-finalizar" id="finalizarCompraBtn">
+                    <i class="fas fa-lock"></i> Finalizar Compra com PIX
+                </button>
             </div>
-            
-            <div class="form-row">
-                <label class="form-label">E-mail</label>
-                <input class="form-input" type="email" id="email" placeholder="seu@email.com">
+
+            <!-- Formulário Cartão de Crédito -->
+            <div id="formCartao" class="payment-form hidden">
+                <div class="form-row">
+                    <label class="form-label">Nome do titular (como está no cartão)</label>
+                    <input class="form-input" type="text" id="cardNome" placeholder="Ex: JOÃO SILVA">
+                </div>
+                
+                <div class="form-row">
+                    <label class="form-label">Número do cartão</label>
+                    <input class="form-input" type="text" id="cardNumero" placeholder="0000 0000 0000 0000" maxlength="19">
+                </div>
+                
+                <div class="card-row">
+                    <div>
+                        <label class="form-label">Validade</label>
+                        <input class="form-input" type="text" id="cardValidade" placeholder="MM/AA">
+                    </div>
+                    <div>
+                        <label class="form-label">CVV</label>
+                        <input class="form-input" type="text" id="cardCvv" placeholder="123" maxlength="4">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <label class="form-label">CPF do titular</label>
+                    <input class="form-input" type="text" id="cardCpf" placeholder="Apenas números">
+                </div>
+                
+                <button class="btn-finalizar" id="finalizarCartaoBtn">
+                    <i class="fas fa-credit-card"></i> Finalizar Compra com Cartão
+                </button>
             </div>
-            
-            <button class="btn-finalizar" id="finalizarCompraBtn">
-                <i class="fas fa-lock"></i> Finalizar Compra
-            </button>
         </div>
     </div>
 
     <footer>
-        <p>OuroCacau © 2025 — Pagamento seguro via PIX</p>
+        <p>OuroCacau © 2026 — Pagamento seguro via PIX ou Cartão</p>
     </footer>
 
     <div class="toast-copy" id="copyToast">📋 Código copiado!</div>
 
     <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
     <script src="/js/main.js"></script>
+    <script src="/js/card.js"></script>
+    <script>
+        // Toggle entre PIX e Cartão
+        const btnPix = document.getElementById('btnPix');
+        const btnCartao = document.getElementById('btnCartao');
+        const formPix = document.getElementById('formPix');
+        const formCartao = document.getElementById('formCartao');
+
+        btnPix.addEventListener('click', () => {
+            btnPix.classList.add('active');
+            btnCartao.classList.remove('active');
+            formPix.classList.remove('hidden');
+            formCartao.classList.add('hidden');
+        });
+
+        btnCartao.addEventListener('click', () => {
+            btnCartao.classList.add('active');
+            btnPix.classList.remove('active');
+            formCartao.classList.remove('hidden');
+            formPix.classList.add('hidden');
+        });
+    </script>
 </body>
-</html>
+                </html>
