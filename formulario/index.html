@@ -1,621 +1,129 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Finalizar Compra | OuroCacau</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800&family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <style>
-        *{margin:0;padding:0;box-sizing:border-box}
-
-        :root {
-            --gold: #c8922a;
-            --gold-light: #e9c46a;
-            --gold-pale: #f5e6c8;
-            --cream: #fffdf7;
-            --cream-warm: #fef9ed;
-            --brown-dark: #2c1e0e;
-            --brown: #5a4226;
-            --brown-light: #8b6b32;
-            --white: #ffffff;
-            --shadow-gold: rgba(200,146,42,0.15);
-            --shadow-dark: rgba(44,30,14,0.08);
-            --radius-xl: 2rem;
-            --radius-full: 100px;
-            --transition: 0.35s cubic-bezier(0.4,0,0.2,1);
-        }
-
-        body {
-            font-family: 'Quicksand', sans-serif;
-            background: var(--cream);
-            color: var(--brown-dark);
-            overflow-x: hidden;
-            min-height: 100vh;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        .bg-pascoa {
-            position: fixed;
-            inset: 0;
-            pointer-events: none;
-            z-index: 0;
-            overflow: hidden;
-        }
-        .bg-pascoa .egg {
-            position: absolute;
-            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-            opacity: 0;
-            animation: floatEgg linear infinite;
-        }
-        @keyframes floatEgg {
-            0%   { transform: translateY(110vh) rotate(0deg) scale(0.8); opacity: 0; }
-            10%  { opacity: 0.12; }
-            90%  { opacity: 0.12; }
-            100% { transform: translateY(-10vh) rotate(360deg) scale(1); opacity: 0; }
-        }
-        .bg-pascoa .sparkle {
-            position: absolute;
-            width: 4px; height: 4px;
-            background: var(--gold-light);
-            border-radius: 50%;
-            animation: sparkle 3s ease-in-out infinite;
-        }
-        @keyframes sparkle {
-            0%, 100% { opacity: 0; transform: scale(0); }
-            50% { opacity: 0.5; transform: scale(1); }
-        }
-
-        .header-pascoa {
-            background: linear-gradient(135deg, var(--cream-warm) 0%, var(--cream) 100%);
-            border-bottom: 1px solid var(--gold-pale);
-            padding: 1rem 2rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .logo-icon {
-            width: 48px; height: 48px;
-            background: linear-gradient(135deg, var(--gold), var(--gold-light));
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 12px var(--shadow-gold);
-            animation: logoPulse 3s ease-in-out infinite;
-        }
-        @keyframes logoPulse {
-            0%, 100% { box-shadow: 0 4px 12px var(--shadow-gold); }
-            50% { box-shadow: 0 6px 20px rgba(200,146,42,0.3); }
-        }
-        .logo-icon svg { width: 28px; height: 28px; }
-        .logo-text {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.6rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, var(--gold), var(--brown-light));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        .location-info {
-            background: var(--gold-pale);
-            padding: 0.5rem 1.2rem;
-            border-radius: 60px;
-            font-size: 0.85rem;
-            font-weight: 500;
-            color: var(--brown);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .location-info i {
-            color: var(--gold);
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 2rem auto;
-            padding: 0 1.5rem;
-            position: relative;
-            z-index: 10;
-        }
-
-        .pagina-checkout {
-            background: var(--white);
-            border-radius: var(--radius-xl);
-            padding: 2.5rem;
-            border: 1px solid rgba(233,196,106,0.3);
-            box-shadow: 0 20px 60px var(--shadow-dark);
-            animation: fadeInUp 0.5s ease-out;
-        }
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .pagina-checkout h2 {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.8rem;
-            color: var(--brown-dark);
-            margin-bottom: 0.3rem;
-        }
-        .pagina-checkout h2 span { color: var(--gold); }
-
-        .voltar-btn {
-            background: none;
-            border: none;
-            font-size: 0.95rem;
-            font-family: 'Quicksand', sans-serif;
-            color: var(--brown-light);
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            cursor: pointer;
-            margin-bottom: 1.5rem;
-            transition: var(--transition);
-            -webkit-tap-highlight-color: transparent;
-            text-decoration: none;
-        }
-        .voltar-btn:hover { color: var(--gold); transform: translateX(-3px); }
-
-        .produto-resumo {
-            background: var(--cream-warm);
-            border-radius: 1rem;
-            padding: 1rem 1.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin: 1.2rem 0 1.8rem;
-            border: 1px solid rgba(233,196,106,0.3);
-        }
-        .produto-resumo span { font-weight: 600; color: var(--brown); }
-        .produto-resumo strong { font-family: 'Playfair Display', serif; font-size: 1.3rem; color: var(--gold); }
-
-        .payment-toggle {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 2rem;
-            background: var(--cream-warm);
-            padding: 0.5rem;
-            border-radius: 60px;
-            border: 1px solid rgba(233,196,106,0.3);
-        }
-        .toggle-btn {
-            flex: 1;
-            padding: 0.8rem;
-            border: none;
-            background: transparent;
-            border-radius: 60px;
-            font-family: 'Quicksand', sans-serif;
-            font-weight: 600;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            color: var(--brown-light);
-        }
-        .toggle-btn.active {
-            background: linear-gradient(135deg, var(--gold), #d4a03a);
-            color: var(--white);
-            box-shadow: 0 4px 12px var(--shadow-gold);
-        }
-        .toggle-btn:not(.active):hover {
-            background: rgba(200,146,42,0.1);
-        }
-
-        .payment-form {
-            transition: all 0.3s ease;
-        }
-        .payment-form.hidden {
-            display: none;
-        }
-
-        .form-row { margin-bottom: 1.2rem; }
-        .form-label {
-            display: block;
-            font-weight: 600;
-            color: var(--brown);
-            margin-bottom: 0.4rem;
-            font-size: 0.9rem;
-        }
-        .form-input {
-            width: 100%;
-            padding: 0.9rem 1.2rem;
-            border-radius: 0.8rem;
-            border: 1.5px solid rgba(233,196,106,0.4);
-            font-family: 'Quicksand', sans-serif;
-            font-size: 1rem;
-            background: var(--cream);
-            color: var(--brown-dark);
-            transition: var(--transition);
-        }
-        .form-input:focus {
-            border-color: var(--gold);
-            outline: none;
-            box-shadow: 0 0 0 4px rgba(233,196,106,0.15);
-        }
-        .form-input::placeholder { color: var(--brown-light); opacity: 0.4; }
-
-        .address-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-        }
-        .card-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-        }
-        .complemento-wrapper {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            flex-wrap: wrap;
-        }
-        .complemento-checkbox {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            cursor: pointer;
-        }
-        .complemento-checkbox input {
-            width: 18px;
-            height: 18px;
-            cursor: pointer;
-        }
-        .complemento-checkbox span {
-            font-size: 0.85rem;
-            color: var(--brown);
-        }
-
-        .btn-finalizar {
-            background: linear-gradient(135deg, #2563eb, #1d4ed8);
-            border: none;
-            width: 100%;
-            padding: 1.1rem;
-            border-radius: var(--radius-full);
-            font-family: 'Quicksand', sans-serif;
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: var(--white);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            cursor: pointer;
-            margin-top: 1.5rem;
-            transition: var(--transition);
-            box-shadow: 0 4px 15px rgba(37,99,235,0.3);
-        }
-        .btn-finalizar:hover { box-shadow: 0 8px 25px rgba(37,99,235,0.4); transform: translateY(-2px); }
-        .btn-finalizar:active { transform: translateY(1px); }
-
-        .btn-cartao {
-            background: linear-gradient(135deg, #10b981, #059669);
-            box-shadow: 0 4px 15px rgba(16,185,129,0.3);
-        }
-        .btn-cartao:hover { box-shadow: 0 8px 25px rgba(16,185,129,0.4); }
-
-        footer {
-            text-align: center;
-            padding: 2rem;
-            color: var(--brown-light);
-            font-size: 0.85rem;
-            opacity: 0.6;
-            position: relative;
-            z-index: 10;
-        }
-
-        .toast-copy {
-            position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%) translateY(20px);
-            background: var(--brown-dark);
-            color: var(--gold-pale);
-            padding: 0.8rem 1.8rem;
-            border-radius: var(--radius-full);
-            font-weight: 600;
-            font-size: 0.95rem;
-            opacity: 0;
-            transition: 0.3s ease;
-            z-index: 3000;
-            pointer-events: none;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-        }
-        .toast-copy.show {
-            opacity: 1;
-            transform: translateX(-50%) translateY(0);
-        }
-
-        *:focus, *:active {
-            outline: none;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        @media (max-width: 768px) {
-            .container { padding: 0 1rem; }
-            .pagina-checkout { padding: 1.8rem; border-radius: 1.5rem; }
-            .card-row, .address-row { grid-template-columns: 1fr; }
-            .header-pascoa { flex-direction: column; text-align: center; }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Finalizar Compra | OuroCacau</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800&family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--gold:#c8922a;--gold-light:#e9c46a;--gold-pale:#f5e6c8;--cream:#fffdf7;--cream-warm:#fef9ed;--brown-dark:#2c1e0e;--brown:#5a4226;--brown-light:#8b6b32;--white:#fff;--shadow-gold:rgba(200,146,42,0.15);--shadow-dark:rgba(44,30,14,0.08);--radius-xl:2rem;--radius-full:100px;--transition:.35s cubic-bezier(0.4,0,0.2,1)}
+body{font-family:'Quicksand',sans-serif;background:var(--cream);color:var(--brown-dark);overflow-x:hidden;min-height:100vh;-webkit-font-smoothing:antialiased}
+.bg-pascoa{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.bg-pascoa .egg{position:absolute;border-radius:50% 50% 50% 50%/60% 60% 40% 40%;opacity:0;animation:floatEgg linear infinite}
+@keyframes floatEgg{0%{transform:translateY(110vh) rotate(0deg) scale(0.8);opacity:0}10%{opacity:.12}90%{opacity:.12}100%{transform:translateY(-10vh) rotate(360deg) scale(1);opacity:0}}
+.bg-pascoa .sparkle{position:absolute;width:4px;height:4px;background:var(--gold-light);border-radius:50%;animation:sparkle 3s ease-in-out infinite}
+@keyframes sparkle{0%,100%{opacity:0;transform:scale(0)}50%{opacity:.5;transform:scale(1)}}
+.header-pascoa{background:linear-gradient(135deg,var(--cream-warm),var(--cream));border-bottom:1px solid var(--gold-pale);padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;backdrop-filter:blur(20px);flex-wrap:wrap;gap:1rem}
+.logo{display:flex;align-items:center;gap:12px}
+.logo-icon{width:48px;height:48px;background:linear-gradient(135deg,var(--gold),var(--gold-light));border-radius:16px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px var(--shadow-gold);animation:logoPulse 3s ease-in-out infinite}
+@keyframes logoPulse{0%,100%{box-shadow:0 4px 12px var(--shadow-gold)}50%{box-shadow:0 6px 20px rgba(200,146,42,0.3)}}
+.logo-icon svg{width:28px;height:28px}
+.logo-text{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;background:linear-gradient(135deg,var(--gold),var(--brown-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.location-info{background:var(--gold-pale);padding:.5rem 1.2rem;border-radius:60px;font-size:.85rem;font-weight:500;color:var(--brown);display:flex;align-items:center;gap:8px}
+.location-info i{color:var(--gold)}
+.container{max-width:800px;margin:2rem auto;padding:0 1.5rem;position:relative;z-index:10}
+.pagina-checkout{background:var(--white);border-radius:var(--radius-xl);padding:2.5rem;border:1px solid rgba(233,196,106,0.3);box-shadow:0 20px 60px var(--shadow-dark);animation:fadeInUp .5s ease-out}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.pagina-checkout h2{font-family:'Playfair Display',serif;font-size:1.8rem;color:var(--brown-dark);margin-bottom:.3rem}
+.pagina-checkout h2 span{color:var(--gold)}
+.voltar-btn{background:0 0;border:none;font-size:.95rem;font-family:'Quicksand',sans-serif;color:var(--brown-light);font-weight:600;display:inline-flex;align-items:center;gap:6px;cursor:pointer;margin-bottom:1.5rem;transition:var(--transition);text-decoration:none}
+.voltar-btn:hover{color:var(--gold);transform:translateX(-3px)}
+.produto-resumo{background:var(--cream-warm);border-radius:1rem;padding:1rem 1.5rem;display:flex;align-items:center;justify-content:space-between;margin:1.2rem 0 1.8rem;border:1px solid rgba(233,196,106,0.3)}
+.produto-resumo span{font-weight:600;color:var(--brown)}
+.produto-resumo strong{font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--gold)}
+.payment-toggle{display:flex;gap:1rem;margin-bottom:2rem;background:var(--cream-warm);padding:.5rem;border-radius:60px;border:1px solid rgba(233,196,106,0.3)}
+.toggle-btn{flex:1;padding:.8rem;border:none;background:0 0;border-radius:60px;font-family:'Quicksand',sans-serif;font-weight:600;font-size:1rem;cursor:pointer;transition:all .3s ease;color:var(--brown-light)}
+.toggle-btn.active{background:linear-gradient(135deg,var(--gold),#d4a03a);color:var(--white);box-shadow:0 4px 12px var(--shadow-gold)}
+.toggle-btn:not(.active):hover{background:rgba(200,146,42,0.1)}
+.payment-form{transition:all .3s ease}
+.payment-form.hidden{display:none}
+.form-row{margin-bottom:1.2rem}
+.form-label{display:block;font-weight:600;color:var(--brown);margin-bottom:.4rem;font-size:.9rem}
+.form-input{width:100%;padding:.9rem 1.2rem;border-radius:.8rem;border:1.5px solid rgba(233,196,106,0.4);font-family:'Quicksand',sans-serif;font-size:1rem;background:var(--cream);color:var(--brown-dark);transition:var(--transition)}
+.form-input:focus{border-color:var(--gold);outline:0;box-shadow:0 0 0 4px rgba(233,196,106,0.15)}
+.form-input::placeholder{color:var(--brown-light);opacity:.4}
+.address-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.card-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.complemento-wrapper{display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
+.complemento-checkbox{display:flex;align-items:center;gap:.5rem;cursor:pointer}
+.complemento-checkbox input{width:18px;height:18px;cursor:pointer}
+.complemento-checkbox span{font-size:.85rem;color:var(--brown)}
+.btn-finalizar{background:linear-gradient(135deg,#2563eb,#1d4ed8);border:none;width:100%;padding:1.1rem;border-radius:var(--radius-full);font-family:'Quicksand',sans-serif;font-size:1.1rem;font-weight:700;color:var(--white);display:flex;align-items:center;justify-content:center;gap:10px;cursor:pointer;margin-top:1.5rem;transition:var(--transition);box-shadow:0 4px 15px rgba(37,99,235,0.3)}
+.btn-finalizar:hover{box-shadow:0 8px 25px rgba(37,99,235,0.4);transform:translateY(-2px)}
+.btn-finalizar:active{transform:translateY(1px)}
+.btn-cartao{background:linear-gradient(135deg,#10b981,#059669);box-shadow:0 4px 15px rgba(16,185,129,0.3)}
+.btn-cartao:hover{box-shadow:0 8px 25px rgba(16,185,129,0.4)}
+footer{text-align:center;padding:2rem;color:var(--brown-light);font-size:.85rem;opacity:.6;position:relative;z-index:10}
+.toast-copy{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--brown-dark);color:var(--gold-pale);padding:.8rem 1.8rem;border-radius:var(--radius-full);font-weight:600;font-size:.95rem;opacity:0;transition:.3s ease;z-index:3000;pointer-events:none;box-shadow:0 8px 25px rgba(0,0,0,0.2)}
+.toast-copy.show{opacity:1;transform:translateX(-50%) translateY(0)}
+*:focus,*:active{outline:0;-webkit-tap-highlight-color:transparent}
+@media (max-width:768px){.container{padding:0 1rem}.pagina-checkout{padding:1.8rem;border-radius:1.5rem}.card-row,.address-row{grid-template-columns:1fr}.header-pascoa{flex-direction:column;text-align:center}}
+</style>
 </head>
 <body>
-    <div class="bg-pascoa" id="bgPascoa"></div>
-
-    <header class="header-pascoa">
-        <div class="logo">
-            <div class="logo-icon">
-                <svg viewBox="0 0 24 24" fill="none">
-                    <ellipse cx="12" cy="14" rx="7" ry="9" fill="#fff" opacity="0.9"/>
-                    <ellipse cx="12" cy="14" rx="7" ry="9" fill="none" stroke="#fff" stroke-width="1.5"/>
-                    <path d="M8 12c1-3 3-5 4-5s3 2 4 5" stroke="#e9c46a" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-                </svg>
-            </div>
-            <span class="logo-text">OuroCacau</span>
-        </div>
-        <div class="location-info" id="locationInfo">
-            <i class="fas fa-map-marker-alt"></i>
-            <span id="locationText">Carregando localização...</span>
-        </div>
-    </header>
-
-    <div class="container">
-        <div class="pagina-checkout">
-            <a href="/" class="voltar-btn" id="voltarParaProdutos">
-                <i class="fas fa-arrow-left"></i> Voltar aos produtos
-            </a>
-            <h2>Quase lá! <span>🐰</span></h2>
-            
-            <div class="produto-resumo" id="resumoCompra">
-                <span id="resumoNome">Carregando...</span>
-                <strong id="resumoPreco">R$ 0,00</strong>
-            </div>
-
-            <div class="payment-toggle">
-                <button class="toggle-btn active" id="btnPix">
-                    <i class="fas fa-qrcode"></i> PIX
-                </button>
-                <button class="toggle-btn" id="btnCartao">
-                    <i class="fas fa-credit-card"></i> Cartão de Crédito
-                </button>
-            </div>
-            
-            <!-- Formulário PIX -->
-            <div id="formPix" class="payment-form">
-                <div class="form-row">
-                    <label class="form-label">Nome completo</label>
-                    <input class="form-input" type="text" id="nome" placeholder="Ex: João Silva">
-                </div>
-                
-                <div class="form-row" style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
-                    <div>
-                        <label class="form-label">CPF</label>
-                        <input class="form-input" type="text" id="cpf" placeholder="Apenas números">
-                    </div>
-                    <div>
-                        <label class="form-label">Telefone</label>
-                        <input class="form-input" type="text" id="telefone" placeholder="(11) 99999-9999">
-                    </div>
-                </div>
-                
-                <div class="form-row">
-                    <label class="form-label">E-mail</label>
-                    <input class="form-input" type="email" id="email" placeholder="seu@email.com">
-                </div>
-                
-                <div class="form-row">
-                    <label class="form-label">CEP</label>
-                    <input class="form-input" type="text" id="cep" placeholder="00000-000">
-                </div>
-                
-                <div class="form-row">
-                    <label class="form-label">Rua</label>
-                    <input class="form-input" type="text" id="rua" placeholder="Rua">
-                </div>
-                
-                <div class="address-row">
-                    <div>
-                        <label class="form-label">Número</label>
-                        <input class="form-input" type="text" id="numero" placeholder="Número">
-                    </div>
-                    <div class="complemento-wrapper">
-                        <div class="complemento-checkbox" id="complementoCheckboxPix">
-                            <input type="checkbox" id="temComplementoPix">
-                            <span>Tem complemento?</span>
-                        </div>
-                        <div style="flex:1" id="complementoInputPix" style="display:none;">
-                            <input class="form-input" type="text" id="complemento" placeholder="Complemento (apto, casa, etc)">
-                        </div>
-                    </div>
-                </div>
-                
-                <button class="btn-finalizar" id="finalizarCompraBtn">
-                    <i class="fas fa-lock"></i> Finalizar Compra com PIX
-                </button>
-            </div>
-
-            <!-- Formulário Cartão de Crédito -->
-            <div id="formCartao" class="payment-form hidden">
-                <div class="form-row">
-                    <label class="form-label">Nome do titular (como está no cartão)</label>
-                    <input class="form-input" type="text" id="cardTitular" placeholder="Como no cartão">
-                </div>
-                
-                <div class="form-row">
-                    <label class="form-label">Telefone</label>
-                    <input class="form-input" type="text" id="cardTelefone" placeholder="(11) 99999-9999">
-                </div>
-                
-                <div class="form-row">
-                    <label class="form-label">E-mail</label>
-                    <input class="form-input" type="email" id="cardEmail" placeholder="seu@email.com">
-                </div>
-                
-                <div class="form-row">
-                    <label class="form-label">CPF</label>
-                    <input class="form-input" type="text" id="cardCpf" placeholder="Apenas números">
-                </div>
-                
-                <div class="form-row">
-                    <label class="form-label">Número do cartão</label>
-                    <input class="form-input" type="text" id="cardNumero" placeholder="0000 0000 0000 0000" maxlength="19">
-                </div>
-                
-                <div class="card-row">
-                    <div>
-                        <label class="form-label">Validade</label>
-                        <input class="form-input" type="text" id="cardValidade" placeholder="MM/AA">
-                    </div>
-                    <div>
-                        <label class="form-label">CVV</label>
-                        <input class="form-input" type="text" id="cardCvv" placeholder="123" maxlength="4">
-                    </div>
-                </div>
-                
-                <div class="form-row">
-                    <label class="form-label">CEP</label>
-                    <input class="form-input" type="text" id="cardCep" placeholder="00000-000">
-                </div>
-                
-                <div class="form-row">
-                    <label class="form-label">Rua</label>
-                    <input class="form-input" type="text" id="cardRua" placeholder="Rua">
-                </div>
-                
-                <div class="address-row">
-                    <div>
-                        <label class="form-label">Número</label>
-                        <input class="form-input" type="text" id="cardNumeroEnd" placeholder="Número">
-                    </div>
-                    <div class="complemento-wrapper">
-                        <div class="complemento-checkbox" id="complementoCheckboxCard">
-                            <input type="checkbox" id="temComplementoCard">
-                            <span>Tem complemento?</span>
-                        </div>
-                        <div style="flex:1" id="complementoInputCard" style="display:none;">
-                            <input class="form-input" type="text" id="cardComplemento" placeholder="Complemento (apto, casa, etc)">
-                        </div>
-                    </div>
-                </div>
-                
-                <button class="btn-finalizar btn-cartao" id="finalizarCartaoBtn">
-                    <i class="fas fa-credit-card"></i> Finalizar Compra com Cartão
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <footer>
-        <p>OuroCacau © 2026 — Pagamento seguro via PIX ou Cartão</p>
-    </footer>
-
-    <div class="toast-copy" id="copyToast">📋 Código copiado!</div>
-
-    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
-    <script src="/js/main.js"></script>
-    <script src="/js/card.js"></script>
-    <script>
-        // Toggle entre PIX e Cartão
-        const btnPix = document.getElementById('btnPix');
-        const btnCartao = document.getElementById('btnCartao');
-        const formPix = document.getElementById('formPix');
-        const formCartao = document.getElementById('formCartao');
-
-        if (btnPix && btnCartao) {
-            btnPix.addEventListener('click', () => {
-                btnPix.classList.add('active');
-                btnCartao.classList.remove('active');
-                formPix.classList.remove('hidden');
-                formCartao.classList.add('hidden');
-            });
-
-            btnCartao.addEventListener('click', () => {
-                btnCartao.classList.add('active');
-                btnPix.classList.remove('active');
-                formCartao.classList.remove('hidden');
-                formPix.classList.add('hidden');
-            });
-        }
-
-        // Complemento toggle para PIX
-        const temComplementoPix = document.getElementById('temComplementoPix');
-        const complementoInputPix = document.getElementById('complementoInputPix');
-        if (temComplementoPix && complementoInputPix) {
-            complementoInputPix.style.display = 'none';
-            temComplementoPix.addEventListener('change', () => {
-                complementoInputPix.style.display = temComplementoPix.checked ? 'block' : 'none';
-            });
-        }
-
-        // Complemento toggle para Cartão
-        const temComplementoCard = document.getElementById('temComplementoCard');
-        const complementoInputCard = document.getElementById('complementoInputCard');
-        if (temComplementoCard && complementoInputCard) {
-            complementoInputCard.style.display = 'none';
-            temComplementoCard.addEventListener('change', () => {
-                complementoInputCard.style.display = temComplementoCard.checked ? 'block' : 'none';
-            });
-        }
-
-        // API de CEP para PIX
-        function buscarCep(cep, prefix) {
-            cep = cep.replace(/\D/g, '');
-            if (cep.length !== 8) return;
-            
-            fetch(`https://viacep.com.br/ws/${cep}/json/`)
-                .then(response => response.json())
-                .then(data => {
-                    if (!data.erro) {
-                        document.getElementById(`${prefix}Rua`).value = data.logradouro || '';
-                    }
-                })
-                .catch(error => console.error('Erro ao buscar CEP:', error));
-        }
-
-        const cepInput = document.getElementById('cep');
-        if (cepInput) {
-            cepInput.addEventListener('blur', () => buscarCep(cepInput.value, ''));
-        }
-
-        const cardCepInput = document.getElementById('cardCep');
-        if (cardCepInput) {
-            cardCepInput.addEventListener('blur', () => buscarCep(cardCepInput.value, 'card'));
-        }
-
-        // IP Info para cidade
-        let userCity = '';
-        fetch('https://ipapi.co/json/')
-            .then(response => response.json())
-            .then(data => {
-                userCity = data.city || 'todo o Brasil';
-                const locationSpan = document.getElementById('locationText');
-                if (locationSpan) {
-                    locationSpan.innerHTML = `📦 Entregamos para ${userCity}`;
-                }
-            })
-            .catch(() => {
-                const locationSpan = document.getElementById('locationText');
-                if (locationSpan) {
-                    locationSpan.innerHTML = '📦 Entregamos para todo o Brasil';
-                }
-            });
-    </script>
+<div class="bg-pascoa" id="bgPascoa"></div>
+<header class="header-pascoa">
+<div class="logo">
+<div class="logo-icon">
+<svg viewBox="0 0 24 24" fill="none"><ellipse cx="12" cy="14" rx="7" ry="9" fill="#fff" opacity="0.9"/><ellipse cx="12" cy="14" rx="7" ry="9" fill="none" stroke="#fff" stroke-width="1.5"/><path d="M8 12c1-3 3-5 4-5s3 2 4 5" stroke="#e9c46a" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
+</div>
+<span class="logo-text">OuroCacau</span>
+</div>
+<div class="location-info" id="locationInfo"><i class="fas fa-map-marker-alt"></i><span id="locationText">Carregando localização...</span></div>
+</header>
+<div class="container">
+<div class="pagina-checkout">
+<a href="/" class="voltar-btn" id="voltarParaProdutos"><i class="fas fa-arrow-left"></i> Voltar aos produtos</a>
+<h2>Quase lá! <span>🐰</span></h2>
+<div class="produto-resumo" id="resumoCompra"><span id="resumoNome">Carregando...</span><strong id="resumoPreco">R$ 0,00</strong></div>
+<div class="payment-toggle"><button class="toggle-btn active" id="btnPix"><i class="fas fa-qrcode"></i> PIX</button><button class="toggle-btn" id="btnCartao"><i class="fas fa-credit-card"></i> Cartão de Crédito</button></div>
+<div id="formPix" class="payment-form">
+<div class="form-row"><label class="form-label">Nome completo</label><input class="form-input" type="text" id="nome" placeholder="Ex: João Silva"></div>
+<div class="form-row" style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;"><div><label class="form-label">CPF</label><input class="form-input" type="text" id="cpf" placeholder="Apenas números"></div><div><label class="form-label">Telefone</label><input class="form-input" type="tel" id="telefone" placeholder="+5511999999999"></div></div>
+<div class="form-row"><label class="form-label">E-mail</label><input class="form-input" type="email" id="email" placeholder="seu@email.com"></div>
+<div class="form-row"><label class="form-label">CEP</label><input class="form-input" type="text" id="cep" placeholder="00000-000"></div>
+<div class="form-row"><label class="form-label">Rua</label><input class="form-input" type="text" id="rua" placeholder="Rua"></div>
+<div class="address-row"><div><label class="form-label">Número</label><input class="form-input" type="text" id="numero" placeholder="Número"></div><div class="complemento-wrapper"><div class="complemento-checkbox" id="complementoCheckboxPix"><input type="checkbox" id="temComplementoPix"><span>Tem complemento?</span></div><div style="flex:1" id="complementoInputPix"><input class="form-input" type="text" id="complemento" placeholder="Complemento (apto, casa, etc)"></div></div></div>
+<button class="btn-finalizar" id="finalizarCompraBtn"><i class="fas fa-lock"></i> Finalizar Compra com PIX</button>
+</div>
+<div id="formCartao" class="payment-form hidden">
+<div class="form-row"><label class="form-label">Nome do titular (como está no cartão)</label><input class="form-input" type="text" id="cardTitular" placeholder="Como no cartão"></div>
+<div class="form-row"><label class="form-label">Telefone</label><input class="form-input" type="tel" id="cardTelefone" placeholder="(11) 99999-9999"></div>
+<div class="form-row"><label class="form-label">E-mail</label><input class="form-input" type="email" id="cardEmail" placeholder="seu@email.com"></div>
+<div class="form-row"><label class="form-label">CPF</label><input class="form-input" type="text" id="cardCpf" placeholder="Apenas números"></div>
+<div class="form-row"><label class="form-label">Número do cartão</label><input class="form-input" type="text" id="cardNumero" placeholder="0000 0000 0000 0000" maxlength="19"></div>
+<div class="card-row"><div><label class="form-label">Validade</label><input class="form-input" type="text" id="cardValidade" placeholder="MM/AA"></div><div><label class="form-label">CVV</label><input class="form-input" type="text" id="cardCvv" placeholder="123" maxlength="4"></div></div>
+<div class="form-row"><label class="form-label">CEP</label><input class="form-input" type="text" id="cardCep" placeholder="00000-000"></div>
+<div class="form-row"><label class="form-label">Rua</label><input class="form-input" type="text" id="cardRua" placeholder="Rua"></div>
+<div class="address-row"><div><label class="form-label">Número</label><input class="form-input" type="text" id="cardNumeroEnd" placeholder="Número"></div><div class="complemento-wrapper"><div class="complemento-checkbox" id="complementoCheckboxCard"><input type="checkbox" id="temComplementoCard"><span>Tem complemento?</span></div><div style="flex:1" id="complementoInputCard"><input class="form-input" type="text" id="cardComplemento" placeholder="Complemento (apto, casa, etc)"></div></div></div>
+<button class="btn-finalizar btn-cartao" id="finalizarCartaoBtn"><i class="fas fa-credit-card"></i> Finalizar Compra com Cartão</button>
+</div>
+</div>
+</div>
+<footer><p>OuroCacau © 2026 — Pagamento seguro via PIX ou Cartão</p></footer>
+<div class="toast-copy" id="copyToast">📋 Código copiado!</div>
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/card.js"></script>
+<script>
+(function(){
+const btnPix=document.getElementById('btnPix'),btnCartao=document.getElementById('btnCartao'),formPix=document.getElementById('formPix'),formCartao=document.getElementById('formCartao');
+if(btnPix&&btnCartao){
+btnPix.addEventListener('click',()=>{btnPix.classList.add('active');btnCartao.classList.remove('active');formPix.classList.remove('hidden');formCartao.classList.add('hidden')});
+btnCartao.addEventListener('click',()=>{btnCartao.classList.add('active');btnPix.classList.remove('active');formCartao.classList.remove('hidden');formPix.classList.add('hidden')})}
+const temComplementoPix=document.getElementById('temComplementoPix'),complementoInputPix=document.getElementById('complementoInputPix');
+if(temComplementoPix&&complementoInputPix){complementoInputPix.style.display='none';temComplementoPix.addEventListener('change',()=>{complementoInputPix.style.display=temComplementoPix.checked?'block':'none'})}
+const temComplementoCard=document.getElementById('temComplementoCard'),complementoInputCard=document.getElementById('complementoInputCard');
+if(temComplementoCard&&complementoInputCard){complementoInputCard.style.display='none';temComplementoCard.addEventListener('change',()=>{complementoInputCard.style.display=temComplementoCard.checked?'block':'none'})}
+function buscarCep(cep,prefix){cep=cep.replace(/\D/g,'');if(cep.length!==8)return;fetch(`https://viacep.com.br/ws/${cep}/json/`).then(r=>r.json()).then(d=>{if(!d.erro)document.getElementById(`${prefix}Rua`).value=d.logradouro||''}).catch(e=>console.error('Erro ao buscar CEP:',e))}
+const cepInput=document.getElementById('cep');if(cepInput)cepInput.addEventListener('blur',()=>buscarCep(cepInput.value,''));
+const cardCepInput=document.getElementById('cardCep');if(cardCepInput)cardCepInput.addEventListener('blur',()=>buscarCep(cardCepInput.value,'card'));
+fetch('https://ipapi.co/json/').then(r=>r.json()).then(d=>{const city=d.city||'todo o Brasil';const locSpan=document.getElementById('locationText');if(locSpan)locSpan.innerHTML=`📦 Entregamos para ${city}`}).catch(()=>{const locSpan=document.getElementById('locationText');if(locSpan)locSpan.innerHTML='📦 Entregamos para todo o Brasil'})
+})();
+</script>
 </body>
-                </html>
+    </html>
