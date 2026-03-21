@@ -42,7 +42,6 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* Fundo animado suave */
         .bg-pascoa {
             position: fixed;
             inset: 0;
@@ -81,7 +80,6 @@
             50% { opacity: 0.3; transform: scale(1); }
         }
 
-        /* Header - estilo igual ao formulário */
         .header-pascoa {
             background: linear-gradient(135deg, #fef9ed 0%, #fffdf7 100%);
             border-bottom: 1px solid #f5e6c8;
@@ -134,9 +132,8 @@
             background-clip: text;
         }
 
-        /* Container principal */
         .container {
-            max-width: 900px;
+            max-width: 1000px;
             margin: 2rem auto;
             padding: 0 2rem;
             position: relative;
@@ -145,7 +142,6 @@
             width: 100%;
         }
 
-        /* Grid de duas colunas */
         .payment-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -153,40 +149,56 @@
             align-items: start;
         }
 
-        /* Coluna esquerda - QR Code */
         .qr-section {
             background: white;
-            border-radius: 24px;
+            border-radius: 28px;
             padding: 2rem;
-            box-shadow: 0 4px 20px var(--shadow);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04);
             border: 1px solid var(--border-light);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .qr-section:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.1);
         }
 
         .qr-section h2 {
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             font-weight: 600;
             color: var(--text-primary);
             margin-bottom: 1.5rem;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
 
-        .qr-section h2 svg {
-            width: 24px;
-            height: 24px;
-            fill: var(--gold);
+        .qr-section h2 .qr-icon {
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, var(--gold), var(--gold-light));
+            border-radius: 12px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .qr-section h2 .qr-icon svg {
+            width: 18px;
+            height: 18px;
+            fill: white;
         }
 
         .qrcode-wrapper {
-            background: white;
-            padding: 1.5rem;
-            border-radius: 20px;
+            background: linear-gradient(145deg, #ffffff, #faf8f3);
+            padding: 1.8rem;
+            border-radius: 24px;
             display: flex;
             justify-content: center;
             align-items: center;
             border: 1px solid var(--border-soft);
             margin-bottom: 1rem;
+            box-shadow: inset 0 1px 4px rgba(0,0,0,0.02), 0 8px 20px rgba(0,0,0,0.03);
         }
 
         #qrcode-container {
@@ -199,51 +211,65 @@
             width: 100% !important;
             height: 100% !important;
             display: block;
+            border-radius: 12px;
         }
 
         .qr-expiration {
             text-align: center;
             color: var(--text-light);
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 6px;
+            gap: 8px;
             padding: 0.5rem;
+            background: #faf8f3;
+            border-radius: 60px;
+            width: fit-content;
+            margin: 0 auto;
         }
 
-        .qr-expiration svg {
-            width: 16px;
-            height: 16px;
-            fill: var(--gold);
-        }
-
-        /* Coluna direita - PIX e instruções */
         .pix-section {
             background: white;
-            border-radius: 24px;
+            border-radius: 28px;
             padding: 2rem;
-            box-shadow: 0 4px 20px var(--shadow);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04);
             border: 1px solid var(--border-light);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .pix-section:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.1);
         }
 
         .pix-header {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             margin-bottom: 1.5rem;
             padding-bottom: 1rem;
-            border-bottom: 1px solid var(--border-soft);
+            border-bottom: 2px solid var(--gold-soft);
         }
 
-        .pix-header svg {
-            width: 24px;
-            height: 24px;
-            fill: var(--gold);
+        .pix-header .pix-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--gold), var(--gold-light));
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .pix-header .pix-icon svg {
+            width: 22px;
+            height: 22px;
+            fill: white;
         }
 
         .pix-header h3 {
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             font-weight: 600;
             color: var(--text-primary);
         }
@@ -251,37 +277,30 @@
         .pix-header span {
             background: var(--gold-soft);
             color: var(--gold);
-            padding: 0.2rem 0.8rem;
+            padding: 0.25rem 1rem;
             border-radius: 100px;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             font-weight: 600;
             margin-left: auto;
         }
 
-        /* Payload */
         .payload-label {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: var(--text-light);
             margin-bottom: 0.5rem;
             display: flex;
             align-items: center;
-            gap: 6px;
-        }
-
-        .payload-label svg {
-            width: 14px;
-            height: 14px;
-            fill: var(--gold);
+            gap: 8px;
         }
 
         .pix-payload {
             background: var(--bg);
-            border-radius: 16px;
-            padding: 1.2rem;
-            font-size: 0.85rem;
+            border-radius: 18px;
+            padding: 1rem 1.2rem;
+            font-size: 0.8rem;
             word-break: break-all;
             border: 1px solid var(--border-soft);
-            margin-bottom: 1rem;
+            margin-bottom: 1.2rem;
             color: var(--text-secondary);
             line-height: 1.5;
             font-family: 'Monaco', 'Menlo', monospace;
@@ -303,14 +322,13 @@
             border-radius: 6px;
         }
 
-        /* Botão Copiar */
         .btn-copiar {
-            background: var(--text-primary);
+            background: linear-gradient(135deg, #2C2C2C, #1E1E1E);
             border: none;
             padding: 1rem;
-            border-radius: 16px;
+            border-radius: 60px;
             font-family: 'Roboto', sans-serif;
-            font-weight: 500;
+            font-weight: 600;
             font-size: 1rem;
             color: white;
             display: flex;
@@ -319,83 +337,70 @@
             gap: 12px;
             width: 100%;
             cursor: pointer;
-            transition: all 0.2s ease;
-            margin-bottom: 2rem;
-        }
-
-        .btn-copiar svg {
-            width: 20px;
-            height: 20px;
-            fill: white;
+            transition: all 0.3s ease;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
         }
 
         .btn-copiar:hover {
-            background: #1a1a1a;
+            background: linear-gradient(135deg, #1a1a1a, #111111);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
         }
 
-        /* Instruções - fundo escuro #1E1E1E */
         .instructions {
-            background: var(--dark-bg);
-            border-radius: 20px;
+            background: linear-gradient(135deg, #1E1E1E, #2a2a2a);
+            border-radius: 24px;
             padding: 1.5rem;
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
         }
 
         .instructions h4 {
             font-size: 1rem;
-            font-weight: 500;
-            color: var(--text-white);
+            font-weight: 600;
+            color: var(--gold-light);
             margin-bottom: 1.2rem;
             display: flex;
             align-items: center;
-            gap: 8px;
-            opacity: 0.9;
-        }
-
-        .instructions h4 svg {
-            width: 18px;
-            height: 18px;
-            fill: var(--gold);
+            gap: 10px;
         }
 
         .instruction-steps {
             display: flex;
             flex-direction: column;
-            gap: 1rem;
+            gap: 0.9rem;
         }
 
         .step {
             display: flex;
             align-items: center;
             gap: 12px;
-            color: var(--text-white);
-            font-size: 0.95rem;
-            opacity: 0.9;
+            color: #e0e0e0;
+            font-size: 0.9rem;
         }
 
         .step-number {
-            width: 24px;
-            height: 24px;
-            background: rgba(255, 255, 255, 0.1);
+            width: 26px;
+            height: 26px;
+            background: rgba(212, 175, 55, 0.2);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: 500;
+            font-weight: 600;
             color: var(--gold);
-            font-size: 0.85rem;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 0.8rem;
+            border: 1px solid rgba(212, 175, 55, 0.4);
         }
 
-        /* Status bar */
         .status-bar {
             background: var(--bg);
-            border-radius: 16px;
-            padding: 1rem 1.2rem;
+            border-radius: 60px;
+            padding: 0.8rem 1.2rem;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             border: 1px solid var(--border-soft);
         }
 
@@ -404,42 +409,38 @@
             align-items: center;
             gap: 8px;
             color: var(--text-secondary);
-        }
-
-        .status-bar span svg {
-            width: 18px;
-            height: 18px;
-            fill: var(--gold);
+            font-weight: 500;
         }
 
         .status-bar button {
-            background: var(--text-primary);
+            background: linear-gradient(135deg, var(--gold), #b47c1a);
             border: none;
-            border-radius: 12px;
+            border-radius: 40px;
             padding: 0.5rem 1.5rem;
             color: white;
             font-family: 'Roboto', sans-serif;
-            font-weight: 500;
-            font-size: 0.9rem;
+            font-weight: 600;
+            font-size: 0.85rem;
             cursor: pointer;
             transition: all 0.2s ease;
         }
 
         .status-bar button:hover {
-            background: #1a1a1a;
+            transform: scale(1.02);
+            box-shadow: 0 4px 12px rgba(200,146,42,0.3);
         }
 
-        /* Selos de segurança */
         .security-badges {
             margin-top: 2rem;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 2.5rem;
-            padding: 1.5rem;
+            gap: 2rem;
+            padding: 1.2rem;
             background: white;
             border-radius: 100px;
             border: 1px solid var(--border-light);
+            flex-wrap: wrap;
         }
 
         .security-badge {
@@ -447,21 +448,40 @@
             align-items: center;
             gap: 8px;
             color: var(--text-soft);
-            font-size: 0.9rem;
-            font-weight: 400;
+            font-size: 0.85rem;
+            font-weight: 500;
+            padding: 0.3rem 0.8rem;
+            border-radius: 40px;
+            transition: all 0.2s ease;
+        }
+
+        .security-badge:hover {
+            background: var(--gold-soft);
+            color: var(--gold);
         }
 
         .security-badge svg {
             width: 18px;
             height: 18px;
-            fill: var(--gold);
+            stroke: var(--gold);
+            stroke-width: 1.5;
+            fill: none;
         }
 
-        /* Popup Sucesso */
+        .security-badge .badge-icon {
+            width: 28px;
+            height: 28px;
+            background: var(--gold-soft);
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
         .popup-sucesso {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(0, 0, 0, 0.4);
             backdrop-filter: blur(8px);
             z-index: 3000;
             display: none;
@@ -472,10 +492,10 @@
 
         .popup-card-sucesso {
             background: white;
-            border-radius: 32px;
-            padding: 3rem;
+            border-radius: 40px;
+            padding: 2.5rem;
             text-align: center;
-            max-width: 400px;
+            max-width: 380px;
             width: 100%;
             animation: popIn 0.4s ease;
             border: 1px solid var(--border-light);
@@ -487,25 +507,26 @@
         }
 
         .popup-card-sucesso .check-icon {
-            width: 80px;
-            height: 80px;
-            background: var(--success);
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--gold), #b47c1a);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 1.5rem;
+            margin: 0 auto 1.2rem;
+            box-shadow: 0 8px 20px rgba(200,146,42,0.3);
         }
 
         .popup-card-sucesso .check-icon svg {
-            width: 36px;
-            height: 36px;
+            width: 32px;
+            height: 32px;
             fill: white;
         }
 
         .popup-card-sucesso h2 {
-            font-family: 'Roboto', sans-serif;
-            font-size: 2.2rem;
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
             font-weight: 700;
             color: var(--text-primary);
             margin-bottom: 0.5rem;
@@ -513,53 +534,51 @@
 
         .popup-card-sucesso p {
             color: var(--text-soft);
-            font-size: 1rem;
-            margin-bottom: 2rem;
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
         }
 
         .popup-card-sucesso .btn-fechar {
-            background: var(--text-primary);
+            background: linear-gradient(135deg, var(--gold), #b47c1a);
             border: none;
             color: white;
             font-family: 'Roboto', sans-serif;
-            font-size: 1rem;
-            font-weight: 500;
-            padding: 0.8rem 2.5rem;
-            border-radius: 12px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            padding: 0.7rem 2rem;
+            border-radius: 60px;
             cursor: pointer;
+            transition: all 0.2s ease;
         }
 
-        /* Footer */
+        .popup-card-sucesso .btn-fechar:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(200,146,42,0.3);
+        }
+
         footer {
             text-align: center;
             padding: 2rem;
             color: #8b6b32;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             position: relative;
             z-index: 10;
             background: white;
             margin-top: auto;
             border-top: 1px solid #eaeaea;
-            opacity: 0.8;
         }
 
-        footer p {
-            color: #8b6b32;
-            opacity: 0.7;
-        }
-
-        /* Toast */
         .toast-copy {
             position: fixed;
             bottom: 30px;
             left: 50%;
             transform: translateX(-50%) translateY(20px);
-            background: var(--text-primary);
+            background: #2C2C2C;
             color: white;
-            padding: 0.8rem 2rem;
-            border-radius: 100px;
+            padding: 0.7rem 1.8rem;
+            border-radius: 60px;
             font-weight: 500;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             opacity: 0;
             transition: 0.3s ease;
             z-index: 3000;
@@ -577,41 +596,36 @@
             outline: none;
         }
 
-        /* Responsivo */
         @media (max-width: 768px) {
             .payment-grid {
                 grid-template-columns: 1fr;
-                gap: 1rem;
+                gap: 1.5rem;
             }
-            
             .container {
                 padding: 0 1rem;
                 margin: 1rem auto;
             }
-            
             .qr-section, .pix-section {
                 padding: 1.5rem;
             }
-            
             #qrcode-container {
-                width: 200px;
-                height: 200px;
+                width: 180px;
+                height: 180px;
             }
-
             .security-badges {
                 flex-direction: column;
-                gap: 1rem;
-                border-radius: 24px;
-                padding: 1.5rem;
-                align-items: flex-start;
+                gap: 0.8rem;
+                border-radius: 28px;
+                padding: 1.2rem;
+                align-items: stretch;
+                text-align: center;
             }
-            
             .status-bar {
                 flex-direction: column;
-                gap: 1rem;
+                gap: 0.8rem;
                 align-items: stretch;
+                text-align: center;
             }
-            
             .status-bar button {
                 width: 100%;
             }
@@ -621,7 +635,6 @@
 <body>
     <div class="bg-pascoa" id="bgPascoa"></div>
 
-    <!-- Header igual ao do formulário -->
     <header class="header-pascoa">
         <div class="logo">
             <div class="logo-icon">
@@ -637,45 +650,49 @@
 
     <div class="container">
         <div class="payment-grid">
-            <!-- Coluna Esquerda: QR Code -->
             <div class="qr-section">
                 <h2>
-                    <svg viewBox="0 0 24 24">
-                        <path d="M4 4h6v6H4V4zm14 0h-6v6h6V4zM4 14h6v6H4v-6zm14 0h-6v6h6v-6zM2 2v8h8V2H2zm12 0v8h8V2h-8zM2 14v8h8v-8H2zm12 0v8h8v-8h-8z"/>
-                    </svg>
+                    <span class="qr-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M4 4h6v6H4V4zm14 0h-6v6h6V4zM4 14h6v6H4v-6zm14 0h-6v6h6v-6zM2 2v8h8V2H2zm12 0v8h8V2h-8zM2 14v8h8v-8H2zm12 0v8h8v-8h-8z"/>
+                        </svg>
+                    </span>
                     Escaneie o QR Code
                 </h2>
                 <div class="qrcode-wrapper">
                     <div id="qrcode-container"></div>
                 </div>
                 <div class="qr-expiration">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z"/>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <polyline points="12 6 12 12 16 14"/>
                     </svg>
                     O QR Code expira em 30 minutos
                 </div>
             </div>
 
-            <!-- Coluna Direita: PIX e Instruções -->
             <div class="pix-section">
                 <div class="pix-header">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/>
-                    </svg>
+                    <span class="pix-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/>
+                        </svg>
+                    </span>
                     <h3>Código PIX</h3>
                     <span>copia e cola</span>
                 </div>
 
                 <div class="payload-label">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
                     </svg>
                     Copie o código abaixo
                 </div>
                 <div class="pix-payload" id="pixPayloadText">carregando...</div>
 
                 <button class="btn-copiar" id="copiarPixBtn">
-                    <svg viewBox="0 0 24 24">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
                         <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
                     </svg>
                     Copiar Código PIX
@@ -683,35 +700,25 @@
 
                 <div class="instructions">
                     <h4>
-                        <svg viewBox="0 0 24 24">
-                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M12 16v-4M12 8h.01"/>
                         </svg>
                         Como pagar com PIX
                     </h4>
                     <div class="instruction-steps">
-                        <div class="step">
-                            <span class="step-number">1</span>
-                            <span>Abra o app do seu banco</span>
-                        </div>
-                        <div class="step">
-                            <span class="step-number">2</span>
-                            <span>Escolha a opção PIX</span>
-                        </div>
-                        <div class="step">
-                            <span class="step-number">3</span>
-                            <span>Escaneie o QR Code ou cole o código</span>
-                        </div>
-                        <div class="step">
-                            <span class="step-number">4</span>
-                            <span>Confirme o pagamento</span>
-                        </div>
+                        <div class="step"><span class="step-number">1</span><span>Abra o app do seu banco</span></div>
+                        <div class="step"><span class="step-number">2</span><span>Escolha a opção PIX</span></div>
+                        <div class="step"><span class="step-number">3</span><span>Escaneie o QR Code ou cole o código</span></div>
+                        <div class="step"><span class="step-number">4</span><span>Confirme o pagamento</span></div>
                     </div>
                 </div>
 
                 <div class="status-bar">
                     <span>
-                        <svg viewBox="0 0 24 24">
-                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z"/>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <polyline points="12 6 12 12 16 14"/>
                         </svg>
                         <span id="statusPagamento">Aguardando pagamento</span>
                     </span>
@@ -720,25 +727,43 @@
             </div>
         </div>
 
-        <!-- Selos de Segurança -->
         <div class="security-badges">
             <div class="security-badge">
-                <svg viewBox="0 0 24 24">
-                    <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/>
-                </svg>
-                Pagamento 100% seguro
+                <span class="badge-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                        <path d="M12 2L3 7l9 5 9-5-9-5z"/>
+                        <path d="M3 12l9 5 9-5"/>
+                        <path d="M3 17l9 5 9-5"/>
+                    </svg>
+                </span>
+                <span>Pagamento 100% seguro</span>
             </div>
             <div class="security-badge">
-                <svg viewBox="0 0 24 24">
-                    <path d="M21 6h-2v2h-2V6h-2V4h2V2h2v2h2v2zm-10 3c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3 1.34 3 3 3zm0 4c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
-                </svg>
-                Compra protegida
+                <span class="badge-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                    </svg>
+                </span>
+                <span>Dados criptografados</span>
             </div>
             <div class="security-badge">
-                <svg viewBox="0 0 24 24">
-                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-                </svg>
-                PIX confirmado na hora
+                <span class="badge-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                        <polyline points="22 4 12 14.01 9 11.01"/>
+                    </svg>
+                </span>
+                <span>PIX confirmado na hora</span>
+            </div>
+            <div class="security-badge">
+                <span class="badge-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M12 8v4l3 3"/>
+                    </svg>
+                </span>
+                <span>Atendimento 24h</span>
             </div>
         </div>
     </div>
@@ -751,18 +776,18 @@
                 </svg>
             </div>
             <h2>Pago!</h2>
-            <p>Sua Páscoa está garantida ✨</p>
+            <p>Sua Páscoa está garantida ✨🐰</p>
             <button class="btn-fechar" id="fecharPopupBtn">Fechar</button>
         </div>
     </div>
 
     <footer>
-        <p>OuroCacau © 2026 — Pagamento seguro via PIX</p>
+        <p>OuroCacau © 2026 — Pagamento processado com segurança via PIX</p>
     </footer>
 
-    <div class="toast-copy" id="copyToast">Código PIX copiado!</div>
+    <div class="toast-copy" id="copyToast">📋 Código PIX copiado!</div>
 
     <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
     <script src="/js/main.js"></script>
 </body>
-  </html>
+    </html>
