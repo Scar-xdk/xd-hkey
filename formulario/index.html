@@ -217,9 +217,32 @@
             grid-template-columns: 1fr 1fr;
             gap: 1rem;
         }
-        .card-cvv {
-            grid-template-columns: 1fr 1fr;
+
+        .form-row { margin-bottom: 1.2rem; }
+        .form-label {
+            display: block;
+            font-weight: 600;
+            color: var(--brown);
+            margin-bottom: 0.4rem;
+            font-size: 0.9rem;
         }
+        .form-input {
+            width: 100%;
+            padding: 0.9rem 1.2rem;
+            border-radius: 0.8rem;
+            border: 1.5px solid rgba(233,196,106,0.4);
+            font-family: 'Quicksand', sans-serif;
+            font-size: 1rem;
+            background: var(--cream);
+            color: var(--brown-dark);
+            transition: var(--transition);
+        }
+        .form-input:focus {
+            border-color: var(--gold);
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(233,196,106,0.15);
+        }
+        .form-input::placeholder { color: var(--brown-light); opacity: 0.4; }
 
         .btn-finalizar {
             background: linear-gradient(135deg, #2563eb, #1d4ed8);
@@ -243,6 +266,13 @@
         }
         .btn-finalizar:hover { box-shadow: 0 8px 25px rgba(37,99,235,0.4); transform: translateY(-2px); }
         .btn-finalizar:active { transform: translateY(1px); box-shadow: 0 2px 8px rgba(37,99,235,0.2); }
+
+        /* Botão cartão com cor diferente */
+        .btn-cartao {
+            background: linear-gradient(135deg, #10b981, #059669);
+            box-shadow: 0 4px 15px rgba(16,185,129,0.3);
+        }
+        .btn-cartao:hover { box-shadow: 0 8px 25px rgba(16,185,129,0.4); }
 
         footer {
             text-align: center;
@@ -326,7 +356,7 @@
                 </button>
             </div>
             
-            <!-- Formulário PIX (existente) -->
+            <!-- Formulário PIX (exatamente como estava) -->
             <div id="formPix" class="payment-form">
                 <div class="form-row">
                     <label class="form-label">Nome completo</label>
@@ -354,11 +384,31 @@
                 </button>
             </div>
 
-            <!-- Formulário Cartão de Crédito -->
+            <!-- Formulário Cartão de Crédito (separado) -->
             <div id="formCartao" class="payment-form hidden">
                 <div class="form-row">
-                    <label class="form-label">Nome do titular (como está no cartão)</label>
-                    <input class="form-input" type="text" id="cardNome" placeholder="Ex: JOÃO SILVA">
+                    <label class="form-label">Nome completo</label>
+                    <input class="form-input" type="text" id="cardNome" placeholder="Ex: João Silva">
+                </div>
+                
+                <div class="form-row">
+                    <label class="form-label">CPF</label>
+                    <input class="form-input" type="text" id="cardCpf" placeholder="Apenas números">
+                </div>
+                
+                <div class="form-row">
+                    <label class="form-label">E-mail</label>
+                    <input class="form-input" type="email" id="cardEmail" placeholder="seu@email.com">
+                </div>
+                
+                <div class="form-row">
+                    <label class="form-label">Telefone</label>
+                    <input class="form-input" type="text" id="cardTelefone" placeholder="(11) 99999-9999">
+                </div>
+                
+                <div class="form-row">
+                    <label class="form-label">Nome no cartão (como está impresso)</label>
+                    <input class="form-input" type="text" id="cardTitular" placeholder="Como no cartão">
                 </div>
                 
                 <div class="form-row">
@@ -377,12 +427,7 @@
                     </div>
                 </div>
                 
-                <div class="form-row">
-                    <label class="form-label">CPF do titular</label>
-                    <input class="form-input" type="text" id="cardCpf" placeholder="Apenas números">
-                </div>
-                
-                <button class="btn-finalizar" id="finalizarCartaoBtn">
+                <button class="btn-finalizar btn-cartao" id="finalizarCartaoBtn">
                     <i class="fas fa-credit-card"></i> Finalizar Compra com Cartão
                 </button>
             </div>
@@ -390,7 +435,7 @@
     </div>
 
     <footer>
-        <p>OuroCacau © 2026 — Pagamento seguro via PIX ou Cartão</p>
+        <p>OuroCacau © 2026 — Pagamento seguro via PIX</p>
     </footer>
 
     <div class="toast-copy" id="copyToast">📋 Código copiado!</div>
@@ -405,19 +450,21 @@
         const formPix = document.getElementById('formPix');
         const formCartao = document.getElementById('formCartao');
 
-        btnPix.addEventListener('click', () => {
-            btnPix.classList.add('active');
-            btnCartao.classList.remove('active');
-            formPix.classList.remove('hidden');
-            formCartao.classList.add('hidden');
-        });
+        if (btnPix && btnCartao) {
+            btnPix.addEventListener('click', () => {
+                btnPix.classList.add('active');
+                btnCartao.classList.remove('active');
+                formPix.classList.remove('hidden');
+                formCartao.classList.add('hidden');
+            });
 
-        btnCartao.addEventListener('click', () => {
-            btnCartao.classList.add('active');
-            btnPix.classList.remove('active');
-            formCartao.classList.remove('hidden');
-            formPix.classList.add('hidden');
-        });
+            btnCartao.addEventListener('click', () => {
+                btnCartao.classList.add('active');
+                btnPix.classList.remove('active');
+                formCartao.classList.remove('hidden');
+                formPix.classList.add('hidden');
+            });
+        }
     </script>
 </body>
-                </html>
+    </html>
