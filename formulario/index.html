@@ -80,6 +80,8 @@
             z-index: 100;
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
+            flex-wrap: wrap;
+            gap: 1rem;
         }
         .logo {
             display: flex;
@@ -110,9 +112,23 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
+        .location-info {
+            background: var(--gold-pale);
+            padding: 0.5rem 1.2rem;
+            border-radius: 60px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--brown);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .location-info i {
+            color: var(--gold);
+        }
 
         .container {
-            max-width: 700px;
+            max-width: 800px;
             margin: 2rem auto;
             padding: 0 1.5rem;
             position: relative;
@@ -211,13 +227,7 @@
             display: none;
         }
 
-        /* Campos do cartão */
-        .card-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-        }
-
+        /* Campos */
         .form-row { margin-bottom: 1.2rem; }
         .form-label {
             display: block;
@@ -243,6 +253,18 @@
             box-shadow: 0 0 0 4px rgba(233,196,106,0.15);
         }
         .form-input::placeholder { color: var(--brown-light); opacity: 0.4; }
+
+        /* Grid para endereço */
+        .address-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 1rem;
+        }
+        .card-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
 
         .btn-finalizar {
             background: linear-gradient(135deg, #2563eb, #1d4ed8);
@@ -314,7 +336,8 @@
         @media (max-width: 768px) {
             .container { padding: 0 1rem; }
             .pagina-checkout { padding: 1.8rem; border-radius: 1.5rem; }
-            .card-row { grid-template-columns: 1fr; }
+            .card-row, .address-row { grid-template-columns: 1fr; }
+            .header-pascoa { flex-direction: column; text-align: center; }
         }
     </style>
 </head>
@@ -331,6 +354,10 @@
                 </svg>
             </div>
             <span class="logo-text">OuroCacau</span>
+        </div>
+        <div class="location-info" id="locationInfo">
+            <i class="fas fa-map-marker-alt"></i>
+            <span id="locationText">Carregando localização...</span>
         </div>
     </header>
 
@@ -356,7 +383,7 @@
                 </button>
             </div>
             
-            <!-- Formulário PIX (exatamente como estava) -->
+            <!-- Formulário PIX -->
             <div id="formPix" class="payment-form">
                 <div class="form-row">
                     <label class="form-label">Nome completo</label>
@@ -370,7 +397,7 @@
                     </div>
                     <div>
                         <label class="form-label">Telefone</label>
-                        <input class="form-input" type="text" id="telefone" placeholder="seu numero exemplo: +55119999..">
+                        <input class="form-input" type="text" id="telefone" placeholder="(11) 99999-9999">
                     </div>
                 </div>
                 
@@ -379,36 +406,64 @@
                     <input class="form-input" type="email" id="email" placeholder="seu@email.com">
                 </div>
                 
+                <!-- Endereço de entrega -->
+                <div class="form-row">
+                    <label class="form-label">CEP</label>
+                    <input class="form-input" type="text" id="cep" placeholder="00000-000">
+                </div>
+                
+                <div class="form-row">
+                    <label class="form-label">Rua</label>
+                    <input class="form-input" type="text" id="rua" placeholder="Rua">
+                </div>
+                
+                <div class="address-row">
+                    <div>
+                        <label class="form-label">Número</label>
+                        <input class="form-input" type="text" id="numero" placeholder="Número">
+                    </div>
+                    <div>
+                        <label class="form-label">Complemento</label>
+                        <input class="form-input" type="text" id="complemento" placeholder="Apto, casa, etc">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <label class="form-label">Bairro</label>
+                    <input class="form-input" type="text" id="bairro" placeholder="Bairro">
+                </div>
+                
+                <div class="address-row">
+                    <div>
+                        <label class="form-label">Cidade</label>
+                        <input class="form-input" type="text" id="cidade" placeholder="Cidade">
+                    </div>
+                    <div>
+                        <label class="form-label">UF</label>
+                        <input class="form-input" type="text" id="uf" placeholder="UF">
+                    </div>
+                </div>
+                
                 <button class="btn-finalizar" id="finalizarCompraBtn">
                     <i class="fas fa-lock"></i> Finalizar Compra com PIX
                 </button>
             </div>
 
-            <!-- Formulário Cartão de Crédito (separado) -->
+            <!-- Formulário Cartão de Crédito -->
             <div id="formCartao" class="payment-form hidden">
-                <div class="form-row">
-                    <label class="form-label">Nome completo</label>
-                    <input class="form-input" type="text" id="cardNome" placeholder="Ex: João Silva">
-                </div>
-                
-                <div class="form-row">
-                    <label class="form-label">CPF</label>
-                    <input class="form-input" type="text" id="cardCpf" placeholder="Apenas números">
-                </div>
-                
                 <div class="form-row">
                     <label class="form-label">E-mail</label>
                     <input class="form-input" type="email" id="cardEmail" placeholder="seu@email.com">
                 </div>
                 
                 <div class="form-row">
-                    <label class="form-label">Telefone</label>
-                    <input class="form-input" type="text" id="cardTelefone" placeholder="(11) 99999-9999">
+                    <label class="form-label">Nome do titular (como está no cartão)</label>
+                    <input class="form-input" type="text" id="cardTitular" placeholder="Como no cartão">
                 </div>
                 
                 <div class="form-row">
-                    <label class="form-label">Nome no cartão (como está impresso)</label>
-                    <input class="form-input" type="text" id="cardTitular" placeholder="Como no cartão">
+                    <label class="form-label">Telefone</label>
+                    <input class="form-input" type="text" id="cardTelefone" placeholder="(11) 99999-9999">
                 </div>
                 
                 <div class="form-row">
@@ -427,6 +482,44 @@
                     </div>
                 </div>
                 
+                <!-- Endereço de entrega para cartão -->
+                <div class="form-row">
+                    <label class="form-label">CEP</label>
+                    <input class="form-input" type="text" id="cardCep" placeholder="00000-000">
+                </div>
+                
+                <div class="form-row">
+                    <label class="form-label">Rua</label>
+                    <input class="form-input" type="text" id="cardRua" placeholder="Rua">
+                </div>
+                
+                <div class="address-row">
+                    <div>
+                        <label class="form-label">Número</label>
+                        <input class="form-input" type="text" id="cardNumeroEnd" placeholder="Número">
+                    </div>
+                    <div>
+                        <label class="form-label">Complemento</label>
+                        <input class="form-input" type="text" id="cardComplemento" placeholder="Apto, casa, etc">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <label class="form-label">Bairro</label>
+                    <input class="form-input" type="text" id="cardBairro" placeholder="Bairro">
+                </div>
+                
+                <div class="address-row">
+                    <div>
+                        <label class="form-label">Cidade</label>
+                        <input class="form-input" type="text" id="cardCidade" placeholder="Cidade">
+                    </div>
+                    <div>
+                        <label class="form-label">UF</label>
+                        <input class="form-input" type="text" id="cardUf" placeholder="UF">
+                    </div>
+                </div>
+                
                 <button class="btn-finalizar btn-cartao" id="finalizarCartaoBtn">
                     <i class="fas fa-credit-card"></i> Finalizar Compra com Cartão
                 </button>
@@ -435,7 +528,7 @@
     </div>
 
     <footer>
-        <p>OuroCacau © 2026 — Pagamento seguro via PIX</p>
+        <p>OuroCacau © 2026 — Pagamento seguro via PIX ou Cartão</p>
     </footer>
 
     <div class="toast-copy" id="copyToast">📋 Código copiado!</div>
@@ -465,6 +558,54 @@
                 formPix.classList.add('hidden');
             });
         }
+
+        // API de CEP
+        function buscarCep(cep, prefix) {
+            cep = cep.replace(/\D/g, '');
+            if (cep.length !== 8) return;
+            
+            fetch(`https://viacep.com.br/ws/${cep}/json/`)
+                .then(response => response.json())
+                .then(data => {
+                    if (!data.erro) {
+                        document.getElementById(`${prefix}Rua`).value = data.logradouro || '';
+                        document.getElementById(`${prefix}Bairro`).value = data.bairro || '';
+                        document.getElementById(`${prefix}Cidade`).value = data.localidade || '';
+                        document.getElementById(`${prefix}Uf`).value = data.uf || '';
+                    }
+                })
+                .catch(error => console.error('Erro ao buscar CEP:', error));
+        }
+
+        // CEP para PIX
+        const cepInput = document.getElementById('cep');
+        if (cepInput) {
+            cepInput.addEventListener('blur', () => buscarCep(cepInput.value, ''));
+        }
+
+        // CEP para Cartão
+        const cardCepInput = document.getElementById('cardCep');
+        if (cardCepInput) {
+            cardCepInput.addEventListener('blur', () => buscarCep(cardCepInput.value, 'card'));
+        }
+
+        // IP Info para localização
+        fetch('https://ipapi.co/json/')
+            .then(response => response.json())
+            .then(data => {
+                const locationSpan = document.getElementById('locationText');
+                if (locationSpan) {
+                    const city = data.city || 'não identificada';
+                    const country = data.country_name || '';
+                    locationSpan.innerHTML = `📦 Entregamos para ${city}${country ? `, ${country}` : ''}`;
+                }
+            })
+            .catch(() => {
+                const locationSpan = document.getElementById('locationText');
+                if (locationSpan) {
+                    locationSpan.innerHTML = '📦 Entregamos para todo o Brasil';
+                }
+            });
     </script>
 </body>
     </html>
