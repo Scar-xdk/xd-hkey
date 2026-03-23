@@ -43,9 +43,6 @@
         .produto-card{background:rgba(255,255,255,0.85);backdrop-filter:blur(10px);border-radius:var(--radius-xl);padding:2rem 1.5rem 1.8rem;text-align:center;transition:var(--transition);cursor:pointer;position:relative;overflow:hidden;animation:fadeInUp .6s ease-out both;box-shadow:0 8px 25px rgba(0,0,0,0.05)}
         .produto-card.promo-destaque{border:2px solid var(--gold);box-shadow:0 15px 35px rgba(200,146,42,0.2);background:linear-gradient(135deg,rgba(255,255,255,0.95),rgba(245,230,200,0.95))}
         .produto-card.promo-destaque::after{content:'🔥 OFERTA IMPERDÍVEL 🔥';position:absolute;top:20px;left:-35px;background:linear-gradient(135deg,var(--gold),#b47c1a);color:white;font-size:.7rem;font-weight:700;padding:.2rem 2rem;transform:rotate(-45deg);width:140px;text-align:center}
-        .produto-card:nth-child(1){animation-delay:.1s}
-        .produto-card:nth-child(2){animation-delay:.2s}
-        .produto-card:nth-child(3){animation-delay:.3s}
         .produto-card:hover{transform:translateY(-8px);box-shadow:0 20px 40px rgba(0,0,0,0.1)}
         .produto-foto{width:100%;height:240px;border-radius:1.2rem;overflow:hidden;margin-bottom:1.2rem;background:#f5f0e6}
         .produto-foto img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease}
@@ -60,12 +57,9 @@
         .mensagens-section{padding:4rem 0 2rem}
         .mensagens-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;margin-top:2rem}
         .msg-card{background:rgba(255,255,255,0.8);backdrop-filter:blur(8px);border-radius:1.5rem;padding:1.8rem;text-align:center;transition:var(--transition);animation:fadeInUp .6s ease-out both;box-shadow:0 4px 15px rgba(0,0,0,0.03)}
-        .msg-card:nth-child(1){animation-delay:.1s}
-        .msg-card:nth-child(2){animation-delay:.2s}
-        .msg-card:nth-child(3){animation-delay:.3s}
-        .msg-card:nth-child(4){animation-delay:.4s}
         .msg-card:hover{transform:translateY(-4px);box-shadow:0 10px 25px rgba(200,146,42,0.1)}
-        .msg-card .msg-emoji{font-size:2.8rem;margin-bottom:.8rem}
+        .msg-card .msg-icon{width:50px;height:50px;margin:0 auto .8rem;display:flex;align-items:center;justify-content:center}
+        .msg-card .msg-icon svg{width:40px;height:40px;fill:var(--gold);stroke:var(--gold);stroke-width:1}
         .msg-card p{font-size:.95rem;color:var(--brown);line-height:1.5;font-style:italic}
         footer{text-align:center;padding:2rem;color:var(--brown-light);font-size:.9rem;position:relative;z-index:10;background:white;border-top:1px solid var(--gold-pale)}
         *:focus,*:active{outline:none;-webkit-tap-highlight-color:transparent}
@@ -108,7 +102,7 @@
     </header>
 
     <div class="mensagem-pascoa">
-        <i class="fas fa-star"></i> 🐣 Páscoa é tempo de renovar a fé e saborear momentos especiais! 🍫 <i class="fas fa-star"></i>
+        <i class="fas fa-star"></i> 🐣 O sabor da felicidade em cada pedaço! Páscoa é tempo de renovar a fé e compartilhar amor. 🍫 <i class="fas fa-star"></i>
     </div>
 
     <section class="hero">
@@ -127,6 +121,16 @@
         </div>
 
         <div class="produtos-grid" id="produtos-grid">
+            <!-- PROMOÇÃO EM DESTAQUE (PRIMEIRO CARD) -->
+            <div class="produto-card promo-destaque" data-nome="Promoção 2 ovos Páscoa grandes recheados" data-preco="49.90">
+                <div class="produto-foto"><img src="/images/3.jpg" alt="Promoção 2 ovos Páscoa grandes recheados"></div>
+                <div class="produto-tag">🔥 SUPER PROMOÇÃO</div>
+                <div class="produto-nome">Kit 2 Ovos da Páscoa grandes</div>
+                <div class="produto-desc">Trio completo: chocolate ao leite, branco e meio amargo</div>
+                <div class="produto-preco"><span class="old-price">R$ 139,80</span> R$ 49,90</div>
+                <button class="btn-comprar"><i class="fas fa-tag"></i> Aproveitar oferta</button>
+            </div>
+
             <div class="produto-card" data-nome="Ovo Páscoa Grande Recheado/UNIDADE" data-preco="69.90">
                 <div class="produto-foto"><img src="/images/1.jpg" alt="Ovo Páscoa Grande Recheado/UNIDADE"></div>
                 <div class="produto-tag">⭐ Mais Vendido</div>
@@ -144,15 +148,6 @@
                 <div class="produto-preco">R$ 89,90</div>
                 <button class="btn-comprar"><i class="fas fa-gift"></i> Comprar</button>
             </div>
-
-            <div class="produto-card promo-destaque" data-nome="Promoção 2 ovos Páscoa grandes recheados" data-preco="49.90">
-                <div class="produto-foto"><img src="/images/3.jpg" alt="Promoção 2 ovos Páscoa grandes recheados"></div>
-                <div class="produto-tag">🔥 SUPER PROMOÇÃO</div>
-                <div class="produto-nome">Kit 2 Ovos da Páscoa grandes</div>
-                <div class="produto-desc">Trio completo: chocolate ao leite, branco e meio amargo</div>
-                <div class="produto-preco"><span class="old-price">R$ 139,80</span> R$ 49,90</div>
-                <button class="btn-comprar"><i class="fas fa-tag"></i> Aproveitar oferta</button>
-            </div>
         </div>
 
         <section class="mensagens-section">
@@ -161,10 +156,41 @@
                 <div class="divider"></div>
             </div>
             <div class="mensagens-grid">
-                <div class="msg-card"><div class="msg-emoji">🌷</div><p>"Que a doçura da Páscoa transforme seus dias em momentos de alegria e renovação."</p></div>
-                <div class="msg-card"><div class="msg-emoji">🐣</div><p>"A Páscoa é o renascimento da esperança. Compartilhe amor, chocolate e bons sentimentos."</p></div>
-                <div class="msg-card"><div class="msg-emoji">🍫</div><p>"Um ovo de Páscoa é mais que chocolate: é carinho, é presença, é memória afetiva."</p></div>
-                <div class="msg-card"><div class="msg-emoji">✨</div><p>"Que sua Páscoa seja leve, doce e cheia de momentos especiais ao lado de quem você ama."</p></div>
+                <div class="msg-card">
+                    <div class="msg-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 2C8 2 4 5 4 9c0 5 8 13 8 13s8-8 8-13c0-4-4-7-8-7z"/>
+                            <circle cx="12" cy="9" r="2"/>
+                        </svg>
+                    </div>
+                    <p>"A verdadeira Páscoa está no coração que sabe amar, perdoar e recomeçar."</p>
+                </div>
+                <div class="msg-card">
+                    <div class="msg-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M20 12v8H4v-8M2 12h20M12 2v10"/>
+                            <circle cx="12" cy="16" r="2"/>
+                        </svg>
+                    </div>
+                    <p>"Renove suas esperanças e deixe que a doçura da Páscoa transforme seus dias."</p>
+                </div>
+                <div class="msg-card">
+                    <div class="msg-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 2L15 8.5L22 9.5L17 14L18.5 21L12 17.5L5.5 21L7 14L2 9.5L9 8.5L12 2z"/>
+                        </svg>
+                    </div>
+                    <p>"Que cada pedaço de chocolate seja um momento de felicidade e cada abraço uma celebração."</p>
+                </div>
+                <div class="msg-card">
+                    <div class="msg-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M21 10.5c0 5-8 12-8 12s-8-7-8-12a8 8 0 1 1 16 0z"/>
+                            <circle cx="12" cy="10" r="3"/>
+                        </svg>
+                    </div>
+                    <p>"Páscoa é recomeço, é esperança, é a certeza de que dias melhores virão."</p>
+                </div>
             </div>
         </section>
     </main>
@@ -186,4 +212,4 @@
     <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
     <script src="/js/main.js"></script>
 </body>
-                        </html>
+        </html>
