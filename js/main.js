@@ -1,4 +1,4 @@
-const API_BASE = 'https://darkmarket-api.onrender.com';
+const API_BASE = 'https://pay-pascoa.onrender.com';
 
 let produtoSelecionado = { nome: '', preco: 0 };
 let currentTransactionId = null;
