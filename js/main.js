@@ -192,6 +192,42 @@ function setupEventListeners() {
     }
 }
 
+function formatarTelefone(telefone) {
+    let numero = telefone.replace(/\D/g, '');
+    
+    if (!numero) return '';
+    
+    if (numero.length === 10) {
+        numero = '55' + numero;
+    } else if (numero.length === 11 && !numero.startsWith('55')) {
+        numero = '55' + numero;
+    } else if (numero.length === 12 && numero.startsWith('55')) {
+    } else if (numero.length === 13 && numero.startsWith('55')) {
+    } else if (numero.length === 8 || numero.length === 9) {
+        numero = '5511' + numero;
+    } else if (numero.length === 10 && !numero.startsWith('55')) {
+        numero = '55' + numero;
+    } else if (numero.length === 11 && numero.startsWith('55')) {
+    } else if (numero.length === 11 && !numero.startsWith('55')) {
+        numero = '55' + numero;
+    } else if (numero.length < 10) {
+        const ddd = '11';
+        numero = '55' + ddd + numero;
+    }
+    
+    if (numero.length === 12 && numero.startsWith('55')) {
+    } else if (numero.length === 13 && numero.startsWith('55')) {
+    } else if (numero.length === 12 && !numero.startsWith('55')) {
+        numero = '55' + numero;
+    }
+    
+    if (!numero.startsWith('55')) {
+        numero = '55' + numero;
+    }
+    
+    return '+' + numero;
+}
+
 async function handleFinalizarCompra(e) {
     e.preventDefault();
     
@@ -200,16 +236,24 @@ async function handleFinalizarCompra(e) {
     const telefoneInput = document.getElementById('telefone');
     const emailInput = document.getElementById('email');
     
+    let telefoneRaw = telefoneInput ? telefoneInput.value.trim() : '';
+    const telefoneFormatado = formatarTelefone(telefoneRaw);
+    
     const dados = {
         nome: nomeInput ? nomeInput.value.trim() : '',
         cpf: cpfInput ? cpfInput.value.trim() : '',
-        telefone: telefoneInput ? telefoneInput.value.trim() : '',
+        telefone: telefoneFormatado,
         email: emailInput ? emailInput.value.trim() : '',
         valor: produtoSelecionado.preco
     };
     
     if (!dados.nome || !dados.cpf || !dados.telefone || !dados.email) {
         showToast('Preencha todos os campos');
+        return;
+    }
+    
+    if (dados.cpf.replace(/\D/g, '').length !== 11) {
+        showToast('❌ CPF inválido');
         return;
     }
 
